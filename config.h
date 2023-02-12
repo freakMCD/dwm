@@ -46,6 +46,7 @@ static const Layout layouts[] = {
 
 /* key definitions */
 #define MODKEY Mod4Mask
+#define ALTGR Mod5Mask
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
 	{ MODKEY|ControlMask,           KEY,      toggleview,     {.ui = 1 << TAG} }, \
@@ -62,10 +63,21 @@ static const char *termcmd[]  = { "urxvtc", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-	{ MODKEY,                       XK_p,      spawn,          SHCMD("xdotool search --onlyvisible --classname URxvtFuzzy windowunmap \
-                                                               || xdotool search --classname URxvtFuzzy windowmap \
-                                                               || urxvtc -name URxvtFuzzy -geometry 50x12+297+1 -e sh -c \
-                                                               'cmd=$(compgen -c | sort -u | fzf --height=100%); setsid -f $cmd'") },
+	{ MODKEY,                       XK_p,      spawn,           SHCMD("xdotool search --onlyvisible --classname URxvtFuzzy windowunmap \
+                                                                || xdotool search --classname URxvtFuzzy windowmap \
+                                                                || urxvtc -name URxvtFuzzy -geometry 50x12+297+1 -e sh -c \
+                                                                'cmd=$(compgen -c | sort -u | fzf --height=100%); setsid -f $cmd'") },
+    { ALTGR,                        XK_Up,     spawn,           SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
+    { ALTGR,                        XK_Down,   spawn,           SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
+    { ALTGR,                        XK_thorn,  spawn,           SHCMD("mpc toggle") },
+    { ALTGR,                        XK_Delete, spawn,           SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
+    { ALTGR,                        XK_Right,  spawn,           SHCMD("mpc next") },
+    { ALTGR,                        XK_Left,   spawn,           SHCMD("mpc prev") },
+    { MODKEY,                       XK_Delete, spawn,           SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle && ~/.config/i3/mic_muted_notif.sh") },
+    { 0,                            XK_Print,  spawn,           SHCMD("maim | xclip -selection clipboard -t image/png") },
+    { MODKEY,                       XK_Print,  spawn,           SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
+    { MODKEY|ShiftMask,             XK_Print,  spawn,           SHCMD("maim -s | xclip -selection clipboard -t image/png") },
+    { ALTGR,                        XK_Print,  spawn,           SHCMD("maim ~/Pictures/screenshots/$(date +%s).png") },
 	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -77,9 +89,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
 	{ MODKEY,                       XK_space,  setlayout,      {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
