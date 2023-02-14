@@ -1,16 +1,16 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 1;        /* border pixel of windows */
+static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
-static const char *fonts[]          = { "monospace:size=10" };
-static const char dmenufont[]       = "monospace:size=10";
-static const char col_gray1[]       = "#222222";
-static const char col_gray2[]       = "#444444";
+static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9" };
+static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=9";
+static const char col_gray1[]       = "#101010";
+static const char col_gray2[]       = "#212121";
 static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#eeeeee";
+static const char col_gray4[]       = "#dddddd";
 static const char col_cyan[]        = "#005577";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
@@ -26,14 +26,20 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class       instance    title       tags mask     isfloating   monitor */
+	/* class        instance    title       tags mask     isfloating   monitor */
 	{ "Zathura",      NULL,       NULL,       1 << 2,            0,           -1 },
-    { NULL,         "URxvtFuzzy",      NULL,  ~0,     1,   -1 },
+    { "league of legends.exe", NULL, NULL, 1<<2, 1, -1},
+    { NULL, "newsboat", NULL, 1 << 3, 0,  -1},
+    { NULL, "neomutt", NULL, 1 << 3, 0,  -1},
+
+    { NULL, "URxvtFuzzy", NULL,  ~0,     1,   -1 },
+    { NULL, "ftwitch", NULL, 0, 1, -1},
+    { NULL, "trans", NULL, 0, ~0, -1},
 };
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
-static const int nmaster     = 2;    /* number of clients in master area */
+static const float mfact     = 0.60; /* factor of master area size [0.05..0.95] */
+static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
@@ -69,7 +75,7 @@ static const Key keys[] = {
                                                                 'cmd=$(compgen -c | sort -u | fzf --height=100%); setsid -f $cmd'") },
     { ALTGR,                        XK_Up,     spawn,           SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
     { ALTGR,                        XK_Down,   spawn,           SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
-    { ALTGR,                        XK_thorn,  spawn,           SHCMD("mpc toggle") },
+    { ALTGR,                        XK_p,  spawn,           SHCMD("mpc toggle") },
     { ALTGR,                        XK_Delete, spawn,           SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
     { ALTGR,                        XK_Right,  spawn,           SHCMD("mpc next") },
     { ALTGR,                        XK_Left,   spawn,           SHCMD("mpc prev") },
@@ -78,7 +84,11 @@ static const Key keys[] = {
     { MODKEY,                       XK_Print,  spawn,           SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
     { MODKEY|ShiftMask,             XK_Print,  spawn,           SHCMD("maim -s | xclip -selection clipboard -t image/png") },
     { ALTGR,                        XK_Print,  spawn,           SHCMD("maim ~/Pictures/screenshots/$(date +%s).png") },
-	{ MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY,                       XK_t,      spawn,           SHCMD("urxvtc -name ftwitch -geometry 64x8-20+20 -e 'fzf-twitch'") },
+    { MODKEY,                       XK_KP_End, spawn,           SHCMD("xdotool search --onlyvisible --classname trans windowunmap \
+                                                                || xdotool search --classname trans windowmap \
+                                                                || urxvtc -name trans -geometry 50x12+297+1 -e sh -c 'trans -I'") },
+    { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
@@ -90,7 +100,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
 	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
-	{ MODKEY,                       XK_space,  setlayout,      {0} },
+	{ MODKEY,                       XK_space,  setlayout,      {.v = &layouts[0]} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
