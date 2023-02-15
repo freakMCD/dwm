@@ -73,10 +73,10 @@ static const Key keys[] = {
                                                                 || xdotool search --classname URxvtFuzzy windowmap \
                                                                 || urxvtc -name URxvtFuzzy -geometry 50x12+297+1 -e sh -c \
                                                                 'cmd=$(compgen -c | sort -u | fzf --height=100%); setsid -f $cmd'") },
-    { ALTGR,                        XK_Up,     spawn,           SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
-    { ALTGR,                        XK_Down,   spawn,           SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
-    { ALTGR,                        XK_p,  spawn,           SHCMD("mpc toggle") },
-    { ALTGR,                        XK_Delete, spawn,           SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
+    { ALTGR,                        XK_Up,     spawn,           SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%; kill -RTMIN $(cat ~/.cache/pidofbar)") },
+    { ALTGR,                        XK_Down,   spawn,           SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; kill -RTMIN $(cat ~/.cache/pidofbar)") },
+    { ALTGR,                        XK_p,      spawn,           SHCMD("mpc toggle") },
+    { ALTGR,                        XK_Delete, spawn,           SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; kill -RTMIN $(cat ~/.cache/pidofbar)") },
     { ALTGR,                        XK_Right,  spawn,           SHCMD("mpc next") },
     { ALTGR,                        XK_Left,   spawn,           SHCMD("mpc prev") },
     { MODKEY,                       XK_Delete, spawn,           SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle && ~/.config/i3/mic_muted_notif.sh") },
