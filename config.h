@@ -5,8 +5,8 @@ static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
-static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9" };
-static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=9";
+static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=bold:pixelsize=13" };
+static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=10";
 static const char col_gray1[]       = "#080808";
 static const char col_gray2[]       = "#212121";
 static const char col_gray3[]       = "#bbbbbb";
@@ -19,7 +19,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "Main", "2", "", "4", "5", "" };
+static const char *tags[] = { "", "", "", "", "", "", "󰇮"};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -27,18 +27,21 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class        instance    title       tags mask     isfloating   monitor */
-	{ "Zathura",      NULL,       NULL,       1 << 2,            0,           -1 },
-    { "league of legends.exe", NULL, NULL, 1<<2, 1, -1},
+    { "mpv", NULL, NULL,            1 << 0, 0, -1 },
 
-    { NULL, "URxvtFuzzy", NULL,  ~0,     1,   -1 },
-    { NULL, "trans", NULL, 0, 1, -1},
-    { NULL, "newsboat", NULL, 1 << 5, 1, -1 },
-    { NULL, "neomutt", NULL, 1 << 5, 1, -1 },
-    { NULL, "ftwitch", NULL, 0, 1, -1},
+    { "qutebrowser", NULL, NULL,    1 << 0, 0, -1 },
+    { "URxvt", "urxvt", NULL,       1 << 1, 0, -1 },
+	{ "Zathura", NULL, NULL,        1 << 2, 0, -1 },
+    { NULL, "newsboat", NULL,       1 << 5, 1, -1 },
+    { NULL, "neomutt", NULL,        1 << 6, 1, -1 },
+
+    { NULL, "URxvtFuzzy", NULL,    ~0, 1, -1 },
+    { NULL, "trans", NULL,          0, 1, -1 },
+    { NULL, "ftwitch", NULL,        0, 1, -1 },
 };
 
 /* layout(s) */
-static const float mfact     = 0.60; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
@@ -51,6 +54,8 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
+#include <X11/XF86keysym.h>
+#include "toggleview_focus.c"
 #define MODKEY Mod4Mask
 #define ALTGR Mod5Mask 
 #define SCRATCHPADP "xdotool search --onlyvisible --classname URxvtFuzzy windowunmap || xdotool search --classname URxvtFuzzy windowmap ||"
@@ -75,9 +80,8 @@ static const char *mpcprev[] = { "mpc", "prev", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-
-	{ MODKEY,                       XK_p,      spawn,          SHCMD(SCRATCHPADP "urxvtc -name URxvtFuzzy -geometry 50x12+297+1 -e sh -c \
-                                                               'cmd=$(compgen -c | sort -u | fzf --height=100%); setsid -f $cmd'") },
+    { 0,                            XF86XK_PowerOff, spawn,    SHCMD("shutdown -h now") },
+	{ MODKEY,                       XK_p,      spawn,          SHCMD(SCRATCHPADP "urxvtc -name URxvtFuzzy -geometry 50x12+297+1 -e sh -c 'cmd=$(compgen -c | sort -u | fzf --height=100%); setsid -f $cmd'") },
     { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD1 "urxvtc -name trans -geometry 50x12+297+1 -e sh -c 'trans -I'") },
     { MODKEY,                       XK_t,      spawn,          SHCMD("urxvtc -name ftwitch -geometry 64x8-20+20 -e 'fzf-twitch'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
@@ -87,7 +91,7 @@ static const Key keys[] = {
     { ALTGR,                        XK_Up,     spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%; kill -RTMIN $(cat ~/.cache/pidofbar)") },
     { ALTGR,                        XK_Down,   spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; kill -RTMIN $(cat ~/.cache/pidofbar)") },
     { ALTGR,                        XK_Delete, spawn,          SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; kill -RTMIN $(cat ~/.cache/pidofbar)") },
-    { MODKEY,                       XK_Delete, spawn,          SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle && ~/.config/i3/mic_muted_notif.sh") },
+    { MODKEY,                       XK_Delete, spawn,          SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle && ~/bin/startup/mic_muted_notif.sh") },
     { 0,                            XK_Print,  spawn,          SHCMD("maim | xclip -selection clipboard -t image/png") },
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
     { MODKEY|ShiftMask,             XK_Print,  spawn,          SHCMD("maim -s | xclip -selection clipboard -t image/png") },
@@ -115,10 +119,11 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
-	TAGKEYS(                        XK_4,                3)
+	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
-    { MODKEY,                       XK_KP_Down,toggleview,     {.ui = 1 << 5} },
-	{ MODKEY|ShiftMask,             XK_q,      quit,           {0} },
+    { MODKEY,                       XK_KP_Down, toggleview_focus,   {.ui = 1 << 5} },
+    { MODKEY,                       XK_KP_Next, toggleview_focus,   {.ui = 1 << 6} },
+	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
 };
 
 /* button definitions */
