@@ -5,7 +5,7 @@ static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
-static const char *fonts[]          = { "JetBrainsMono Nerd Font:style=bold:pixelsize=13" };
+static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=10";
 static const char col_gray1[]       = "#080808";
 static const char col_gray2[]       = "#212121";
@@ -80,7 +80,7 @@ static const char *mpcprev[] = { "mpc", "prev", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-    { 0,                            XF86XK_PowerOff, spawn,    SHCMD("shutdown -h now") },
+    { 0,                            XF86XK_PowerOff, spawn,    SHCMD("sleep 5; shutdown now") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD(SCRATCHPADP "urxvtc -name URxvtFuzzy -geometry 50x12+297+1 -e sh -c 'cmd=$(compgen -c | sort -u | fzf --height=100%); setsid -f $cmd'") },
     { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD1 "urxvtc -name trans -geometry 50x12+297+1 -e sh -c 'trans -I'") },
     { MODKEY,                       XK_t,      spawn,          SHCMD("urxvtc -name ftwitch -geometry 64x8-20+20 -e 'fzf-twitch'") },
