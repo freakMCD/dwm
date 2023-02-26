@@ -32,10 +32,12 @@ static const Rule rules[] = {
     { "qutebrowser", NULL, NULL,    1 << 0, 0, -1 },
     { "URxvt", "urxvt", NULL,       1 << 1, 0, -1 },
 	{ "Zathura", NULL, NULL,        1 << 2, 0, -1 },
+    { "duckstation-qt", NULL, NULL,  1 << 3, 0, -1 },
+
     { NULL, "newsboat", NULL,       1 << 5, 1, -1 },
     { NULL, "neomutt", NULL,        1 << 6, 1, -1 },
 
-    { NULL, "URxvtFuzzy", NULL,    ~0, 1, -1 },
+    { NULL, "launcher", NULL,      ~0, 1, -1 },
     { NULL, "trans", NULL,          0, 1, -1 },
     { NULL, "ftwitch", NULL,        0, 1, -1 },
 };
@@ -58,8 +60,7 @@ static const Layout layouts[] = {
 #include "toggleview_focus.c"
 #define MODKEY Mod4Mask
 #define ALTGR Mod5Mask 
-#define SCRATCHPADP "xdotool search --onlyvisible --classname URxvtFuzzy windowunmap || xdotool search --classname URxvtFuzzy windowmap ||"
-#define SCRATCHPAD1 "xdotool search --onlyvisible --classname trans windowunmap || xdotool search --classname trans windowmap ||"
+#define SCRATCHPAD "xdotool search --onlyvisible --classname trans windowunmap || xdotool search --classname trans windowmap ||"
 
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -80,9 +81,9 @@ static const char *mpcprev[] = { "mpc", "prev", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-    { 0,                            XF86XK_PowerOff, spawn,    SHCMD("sleep 5; shutdown now") },
-	{ MODKEY,                       XK_p,      spawn,          SHCMD(SCRATCHPADP "urxvtc -name URxvtFuzzy -geometry 50x12+297+1 -e sh -c 'cmd=$(compgen -c | sort -u | fzf --height=100%); setsid -f $cmd'") },
-    { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD1 "urxvtc -name trans -geometry 50x12+297+1 -e sh -c 'trans -I'") },
+    { 0,                            XF86XK_PowerOff, spawn,    SHCMD("notify-send Apagando...; sleep 5; shutdown now") },
+	{ MODKEY,                       XK_p,      spawn,          SHCMD("urxvtc -name launcher -geometry 60x15+600-20 -e sh -c ~/bin/startup/launcher-desktop.sh") },
+    { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "urxvtc -name trans -geometry 50x12+297+1 -e sh -c 'trans -I'") },
     { MODKEY,                       XK_t,      spawn,          SHCMD("urxvtc -name ftwitch -geometry 64x8-20+20 -e 'fzf-twitch'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
     { ALTGR,                        XK_p,      spawn,          {.v = mpctoggle } },
