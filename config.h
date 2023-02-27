@@ -58,6 +58,7 @@ static const Layout layouts[] = {
 /* key definitions */
 #include <X11/XF86keysym.h>
 #include "toggleview_focus.c"
+#include "togglefullscr.c"
 #define MODKEY Mod4Mask
 #define ALTGR Mod5Mask 
 #define SCRATCHPAD "xdotool search --onlyvisible --classname trans windowunmap || xdotool search --classname trans windowmap ||"
