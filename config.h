@@ -87,6 +87,7 @@ static const Key keys[] = {
     { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "urxvtc -name trans -geometry 50x12+297+1 -e sh -c 'trans -I'") },
     { MODKEY,                       XK_t,      spawn,          SHCMD("urxvtc -name ftwitch -geometry 64x8-20+20 -e 'fzf-twitch'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY|ShiftMask,             XK_Return, view,           {.ui = 1 << 1 } },
     { ALTGR,                        XK_p,      spawn,          {.v = mpctoggle } },
     { ALTGR,                        XK_Right,  spawn,          {.v = mpcnext } },
     { ALTGR,                        XK_Left,   spawn,          {.v = mpcprev } },
@@ -123,6 +124,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
+    { MODKEY,                       XK_less,    toggleview,         {.ui = 1 << 4 } },
     { MODKEY,                       XK_KP_Down, toggleview_focus,   {.ui = 1 << 5} },
     { MODKEY,                       XK_KP_Next, toggleview_focus,   {.ui = 1 << 6} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },

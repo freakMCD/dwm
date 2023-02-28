@@ -2239,8 +2239,6 @@ view(const Arg *arg)
 
 	if (selmon->showbar != selmon->pertag->showbars[selmon->pertag->curtag])
 		togglebar(NULL);
-
-	focus(NULL);
 	arrange(selmon);
 }
 
