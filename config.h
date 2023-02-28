@@ -42,6 +42,8 @@ static const Rule rules[] = {
     { NULL, "ftwitch", NULL,        0, 1, -1 },
 };
 
+static const char sticky_class[] = "mpv";
+
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
@@ -112,6 +114,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
 	{ MODKEY,                       XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {.v = &layouts[0]} },
+    { MODKEY,                       XK_s,      togglesticky,    {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
@@ -124,7 +127,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
-    { MODKEY,                       XK_less,    toggleview,         {.ui = 1 << 4 } },
+    { MODKEY,                       XK_less,    toggleview_focus,         {.ui = 1 << 4 } },
     { MODKEY,                       XK_KP_Down, toggleview_focus,   {.ui = 1 << 5} },
     { MODKEY,                       XK_KP_Next, toggleview_focus,   {.ui = 1 << 6} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
