@@ -50,6 +50,10 @@ static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
+#include <X11/XF86keysym.h>
+#include "toggleview_focus.c"
+#include "togglefullscr.c"
+#include "toggleview_scratchpad.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
@@ -58,9 +62,6 @@ static const Layout layouts[] = {
 };
 
 /* key definitions */
-#include <X11/XF86keysym.h>
-#include "toggleview_focus.c"
-#include "togglefullscr.c"
 #define MODKEY Mod4Mask
 #define ALTGR Mod5Mask 
 #define SCRATCHPAD "xdotool search --onlyvisible --classname trans windowunmap || xdotool search --classname trans windowmap ||"
@@ -127,7 +128,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
-    { MODKEY,                       XK_less,    toggleview_focus,         {.ui = 1 << 4 } },
+    { MODKEY,                       XK_less,    toggleview_scratchpad,         {.ui = 1 << 4 } },
     { MODKEY,                       XK_KP_Down, toggleview_focus,   {.ui = 1 << 5} },
     { MODKEY,                       XK_KP_Next, toggleview_focus,   {.ui = 1 << 6} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
