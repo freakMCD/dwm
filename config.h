@@ -30,7 +30,7 @@ static const Rule rules[] = {
     { "mpv", NULL, NULL,            1 << 4, 1, -1 },
 
     { "qutebrowser", NULL, NULL,    1 << 0, 0, -1 },
-    { "URxvt", "urxvt", NULL,       1 << 1, 0, -1 },
+    { "st-256color", "st-256color", NULL,       1 << 1, 0, -1 },
 	{ "Zathura", NULL, NULL,        1 << 2, 0, -1 },
     { "duckstation-qt", NULL, NULL,  1 << 3, 0, -1 },
 
@@ -78,7 +78,8 @@ static const Layout layouts[] = {
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[] = { "dmenu_run", NULL };
-static const char *termcmd[]  = { "urxvtc", NULL };
+static const char *termcmd[]  = { "st", NULL };
+static const char *termuxcmd[]  = { "st", "-e", "tmux", NULL };
 static const char *mpcnext[] = { "mpc", "next", NULL };
 static const char *mpctoggle[] = { "mpc", "toggle", NULL };
 static const char *mpcprev[] = { "mpc", "prev", NULL };
@@ -86,10 +87,11 @@ static const char *mpcprev[] = { "mpc", "prev", NULL };
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
     { 0,                            XF86XK_PowerOff, spawn,    SHCMD("notify-send Apagando...; sleep 5; shutdown now") },
-	{ MODKEY,                       XK_p,      spawn,          SHCMD("urxvtc -name launcher -geometry 60x15+600-20 -e sh -c ~/bin/startup/launcher-desktop.sh") },
-    { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "urxvtc -name trans -geometry 50x12+297+1 -e sh -c 'trans -I'") },
-    { MODKEY,                       XK_t,      spawn,          SHCMD("urxvtc -name ftwitch -geometry 64x8-20+20 -e 'fzf-twitch'") },
+	{ MODKEY,                       XK_p,      spawn,          SHCMD("st -n launcher -g 60x15+600-20 -e ~/bin/startup/launcher-desktop.sh") },
+    { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "st -n trans -g 50x12+297+1 -e sh -c 'trans -I'") },
+    { MODKEY,                       XK_t,      spawn,          SHCMD("st -n ftwitch -g 64x8-20+20 -e 'fzf-twitch'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY|ControlMask|ShiftMask, XK_Return, spawn,          {.v = termuxcmd } },
     { MODKEY|ShiftMask,             XK_Return, view,           {.ui = 1 << 1 } },
     { ALTGR,                        XK_p,      spawn,          {.v = mpctoggle } },
     { ALTGR,                        XK_Right,  spawn,          {.v = mpcnext } },
