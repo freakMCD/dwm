@@ -86,7 +86,7 @@ static const char *mpcprev[] = { "mpc", "prev", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-    { 0,                            XF86XK_PowerOff, spawn,    SHCMD("notify-send Apagando...; sleep 5; shutdown now") },
+    { 0,                            XF86XK_PowerOff, spawn,    SHCMD("pkill qutebrowser; notify-send Apagando...; sleep 5; shutdown now") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD("st -n launcher -g 60x15+600-20 -e ~/bin/startup/launcher-desktop.sh") },
     { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "st -n trans -g 50x12+297+1 -e sh -c 'trans -I'") },
     { MODKEY,                       XK_t,      spawn,          SHCMD("st -n ftwitch -g 64x8-20+20 -e 'fzf-twitch'") },
