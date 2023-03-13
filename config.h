@@ -50,10 +50,6 @@ static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
-#include <X11/XF86keysym.h>
-#include "toggleview_focus.c"
-#include "togglefullscr.c"
-#include "toggleview_scratchpad.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
@@ -83,6 +79,11 @@ static const char *termuxcmd[]  = { "st", "-e", "tmux", NULL };
 static const char *mpcnext[] = { "mpc", "next", NULL };
 static const char *mpctoggle[] = { "mpc", "toggle", NULL };
 static const char *mpcprev[] = { "mpc", "prev", NULL };
+
+#include <X11/XF86keysym.h>
+#include "toggleview_focus.c"
+#include "togglefullscr.c"
+#include "toggleview_scratchpad.c"
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
