@@ -1,11 +1,12 @@
 static void toggleview_scratchpad(const Arg *arg) {
     Client *c;
-    for(c = selmon->clients; c->tags & arg->ui && c->next; c = c->next) 
-    {
-        if (ISVISIBLE(c)) 
-            c->issticky=0;
-        else
-            c->issticky=1;
-        arrange(selmon);
+    for(c = selmon->clients; c; c = c->next) { 
+        if(c->tags & arg->ui) {
+            if (c->issticky) 
+                setsticky(c, 0);
+            else if (!c->issticky)
+                setsticky(c, 1);
+            arrange(selmon);
+        }
     }
 }

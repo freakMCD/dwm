@@ -320,7 +320,7 @@ applyrules(Client *c)
 		}
 	}
      if (strstr(class, sticky_class)) {
-         c->issticky = 1;
+         setsticky(c ,1);
      }
 	if (ch.res_class)
 		XFree(ch.res_class);
