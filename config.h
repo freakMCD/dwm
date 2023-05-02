@@ -19,27 +19,26 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "󰇮"};
+static const char *tags[] = { "", "", "", "", "", "", "󰇮"};
 
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class        instance    title       tags mask     isfloating   monitor */
-    { "mpv", NULL, NULL,            1 << 4, 1, -1 },
+	/* class            instance        title   tags mask, isfloating, monitor */
+	{ "Zathura",        NULL,           NULL,   1 << 0, 0, -1 },
+    { "st-256color",    "st-256color",  NULL,   1 << 1, 0, -1 },
+    { "qutebrowser",    NULL,           NULL,   1 << 2, 0, -1 },
+    { "duckstation-qt", NULL,           NULL,   1 << 3, 0, -1 },
 
-    { "qutebrowser", NULL, NULL,    1 << 0, 0, -1 },
-    { "st-256color", "st-256color", NULL,       1 << 1, 0, -1 },
-	{ "Zathura", NULL, NULL,        1 << 2, 0, -1 },
-    { "duckstation-qt", NULL, NULL,  1 << 3, 0, -1 },
+    { "mpv",            NULL,           NULL,   1 << 4, 1, -1 },
+    { NULL,             "newsboat",     NULL,   1 << 5, 1, -1 },
+    { NULL,             "neomutt",      NULL,   1 << 6, 1, -1 },
 
-    { NULL, "newsboat", NULL,       1 << 5, 1, -1 },
-    { NULL, "neomutt", NULL,        1 << 6, 1, -1 },
-
-    { NULL, "launcher", NULL,       0, 1, -1 },
-    { NULL, "trans", NULL,          0, 1, -1 },
-    { NULL, "ftwitch", NULL,        0, 1, -1 },
+    { NULL,             "launcher",     NULL,   0,      1, -1 },
+    { NULL,             "trans",        NULL,   0,      1, -1 },
+    { NULL,             "ftwitch",      NULL,   0,      1, -1 },
 };
 
 static const char sticky_class[] = "mpv";
@@ -73,12 +72,12 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", NULL };
-static const char *termcmd[]  = { "st", NULL };
+static const char *dmenucmd[]   = { "dmenu_run", NULL };
+static const char *termcmd[]    = { "st", NULL };
 static const char *termuxcmd[]  = { "st", "-e", "tmux", NULL };
-static const char *mpcnext[] = { "mpc", "next", NULL };
-static const char *mpctoggle[] = { "mpc", "toggle", NULL };
-static const char *mpcprev[] = { "mpc", "prev", NULL };
+static const char *mpcnext[]    = { "mpc", "next", NULL };
+static const char *mpctoggle[]  = { "mpc", "toggle", NULL };
+static const char *mpcprev[]    = { "mpc", "prev", NULL };
 
 #include <X11/XF86keysym.h>
 #include "toggleview_focus.c"
