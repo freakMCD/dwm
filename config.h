@@ -3,7 +3,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const int showbar            = 1;        /* 0 means no bar */
+static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=10";
@@ -88,18 +88,17 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
     { 0,                            XF86XK_PowerOff, spawn,    SHCMD("notify-send Apagando...; pkill qutebrowser; pkill zathura; sleep 5; shutdown now") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD("st -n launcher -g 60x15+600-20 -e ~/bin/startup/launcher-desktop.sh") },
-    { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "st -n trans -g 50x12+297+1 -e sh -c 'trans -I'") },
-    { MODKEY,                       XK_t,      spawn,          SHCMD("st -n ftwitch -g 64x8-20+20 -e 'fzf-twitch'") },
+    { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "st -n trans -g 50x12+297+1 -e sh -c 'trans -4 -I'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
     { MODKEY|ControlMask|ShiftMask, XK_Return, spawn,          {.v = termuxcmd } },
     { MODKEY|ShiftMask,             XK_Return, view,           {.ui = 1 << 1 } },
     { ALTGR,                        XK_p,      spawn,          {.v = mpctoggle } },
     { ALTGR,                        XK_Right,  spawn,          {.v = mpcnext } },
     { ALTGR,                        XK_Left,   spawn,          {.v = mpcprev } },
-    { ALTGR,                        XK_Up,     spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%; kill -RTMIN $(cat ~/.cache/pidofbar)") },
-    { ALTGR,                        XK_Down,   spawn,          SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%; kill -RTMIN $(cat ~/.cache/pidofbar)") },
-    { ALTGR,                        XK_Delete, spawn,          SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle; kill -RTMIN $(cat ~/.cache/pidofbar)") },
-    { MODKEY,                       XK_Delete, spawn,          SHCMD("pactl set-source-mute @DEFAULT_SOURCE@ toggle && ~/bin/startup/mic_muted_notif.sh") },
+    { ALTGR,                        XK_Up,     spawn,          SHCMD("~/bin/startup/volume_notif.sh up; kill -RTMIN $(cat ~/.cache/pidofbar)") },
+    { ALTGR,                        XK_Down,   spawn,          SHCMD("~/bin/startup/volume_notif.sh down; kill -RTMIN $(cat ~/.cache/pidofbar)") },
+    { ALTGR,                        XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mute; kill -RTMIN $(cat ~/.cache/pidofbar)") },
+    { MODKEY,                       XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mic") },
     { 0,                            XK_Print,  spawn,          SHCMD("maim | xclip -selection clipboard -t image/png") },
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
     { MODKEY|ShiftMask,             XK_Print,  spawn,          SHCMD("maim -s | xclip -selection clipboard -t image/png") },
