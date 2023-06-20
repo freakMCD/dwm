@@ -102,7 +102,7 @@ static const Key keys[] = {
     { 0,                            XK_Print,  spawn,          SHCMD("maim | xclip -selection clipboard -t image/png") },
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
     { MODKEY|ShiftMask,             XK_Print,  spawn,          SHCMD("maim -s | xclip -selection clipboard -t image/png") },
-    { ALTGR,                        XK_Print,  spawn,          SHCMD("maim ~/Pictures/screenshots/$(date +%s).png") },
+    { ALTGR,                        XK_Print,  spawn,          SHCMD("maim -s ~/Pictures/screenshots/$(date +%s).png") },
     
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
