@@ -3,7 +3,7 @@
 /* appearance */
 static const unsigned int borderpx  = 2;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const int showbar            = 0;        /* 0 means no bar */
+static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=10";
@@ -28,23 +28,22 @@ static const Rule rules[] = {
 	 */
 	/* class            instance        title   tags mask, isfloating, monitor */
 	{ "Zathura",        NULL,           NULL,   1 << 0, 0, -1 },
+    { "qutebrowser",    NULL,           NULL,   1 << 0, 0, -1 },
+    { "mpv",            NULL,           NULL,   1 << 0, 0, -1 },
     { "st-256color",    "st-256color",  NULL,   1 << 1, 0, -1 },
-    { "qutebrowser",    NULL,           NULL,   1 << 2, 0, -1 },
-    { "duckstation-qt", NULL,           NULL,   1 << 3, 0, -1 },
+    { "duckstation-qt", NULL,           NULL,   1 << 2, 0, -1 },
 
-    { "mpv",            NULL,           NULL,   1 << 4, 1, -1 },
     { NULL,             "newsboat",     NULL,   1 << 5, 1, -1 },
     { NULL,             "neomutt",      NULL,   1 << 6, 1, -1 },
 
     { NULL,             "launcher",     NULL,   0,      1, -1 },
     { NULL,             "trans",        NULL,   0,      1, -1 },
-    { NULL,             "ftwitch",      NULL,   0,      1, -1 },
 };
 
 static const char sticky_class[] = "mpv";
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.67; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
@@ -52,8 +51,8 @@ static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen win
 static const Layout layouts[] = {
 	/* symbol     arrange function */
 	{ "[]=",      tile },    /* first entry is default */
-	{ "><>",      NULL },    /* no layout function means floating behavior */
 	{ "[M]",      monocle },
+	{ "><>",      NULL },    /* no layout function means floating behavior */
 };
 
 /* key definitions */
@@ -114,8 +113,10 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_f,      togglefullscr,  {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {.v = &layouts[0]} },
+    { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+    { MODKEY|ShiftMask,             XK_f,      setlayout,      {.v = &layouts[2]} },
+  /*{ MODKEY,                       XK_f,      togglefullscr,  {0} },*/
     { MODKEY,                       XK_s,      togglesticky,    {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
