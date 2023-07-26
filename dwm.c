@@ -421,8 +421,15 @@ arrangemon(Monitor *m)
 
 void
 attach(Client *c)
-{
-	c->next = c->mon->clients;
+{   
+    if (c->issticky) {
+        Client **tc;
+    	c->next = NULL;
+    	for (tc = &c->mon->clients; *tc; tc = &(*tc)->next);
+    	*tc = c;
+        return;
+    }
+    c->next = c->mon->clients;
 	c->mon->clients = c;
 }
 
@@ -1223,8 +1230,8 @@ manage(Window w, XWindowAttributes *wa)
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if (c->isfloating)
 		XRaiseWindow(dpy, c->win);
-	attach(c);
-	attachstack(c);
+       attach(c);
+       attachstack(c);    
 	XChangeProperty(dpy, root, netatom[NetClientList], XA_WINDOW, 32, PropModeAppend,
 		(unsigned char *) &(c->win), 1);
 	XMoveResizeWindow(dpy, c->win, c->x + 2 * sw, c->y, c->w, c->h); /* some windows require this */
@@ -1672,9 +1679,8 @@ setsticky(Client *c, int sticky)
 void
 setlayout(const Arg *arg)
 {
-	if (!arg || !arg->v || arg->v != selmon->lt[selmon->sellt])
-		selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag] ^= 1;
-	if (arg && arg->v)
+    selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag] ^= 1;
+	if (arg && arg->v && arg->v != selmon->lt[selmon->sellt ^ 1])
 		selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt] = (Layout *)arg->v;
 	strncpy(selmon->ltsymbol, selmon->lt[selmon->sellt]->symbol, sizeof selmon->ltsymbol);
 	if (selmon->sel)
