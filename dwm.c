@@ -1679,6 +1679,10 @@ setsticky(Client *c, int sticky)
 void
 setlayout(const Arg *arg)
 {
+    if(selmon->sel->issticky) {
+            setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
+            return;
+    }
     selmon->sellt = selmon->pertag->sellts[selmon->pertag->curtag] ^= 1;
 	if (arg && arg->v && arg->v != selmon->lt[selmon->sellt ^ 1])
 		selmon->lt[selmon->sellt] = selmon->pertag->ltidxs[selmon->pertag->curtag][selmon->sellt] = (Layout *)arg->v;
