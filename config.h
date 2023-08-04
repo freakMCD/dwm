@@ -11,7 +11,7 @@ static const char col_gray1[]       = "#080808";
 static const char col_gray2[]       = "#212121";
 static const char col_gray3[]       = "#bbbbbb";
 static const char col_gray4[]       = "#dddddd";
-static const char col_cyan[]        = "#005577";
+static const char col_cyan[]        = "#007799";
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
@@ -19,7 +19,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "󰇮"};
+static const char *tags[] = { "", "", "", "", "", "", "󰇮", "7"};
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -29,10 +29,19 @@ static const Rule rules[] = {
 	/* class            instance        title   tags mask, isfloating, monitor */
 	{ "Zathura",        NULL,           NULL,   1 << 0, 0, -1 },
     { "qutebrowser",    NULL,           NULL,   1 << 0, 0, -1 },
-    { "mpv",            NULL,           NULL,   1 << 0, 0, -1 },
     { "st-256color",    "st-256color",  NULL,   1 << 1, 0, -1 },
-    { "duckstation-qt", NULL,           NULL,   1 << 2, 0, -1 },
+    { "qBittorrent",    NULL,           NULL,   1 << 2, 0, -1 },
 
+    /* Gaming */
+    { "darksoulsremastered.exe", NULL,  NULL,   1 << 3, 0, -1 },
+    { "steam_app_815370", NULL,  NULL,   1 << 3, 0, -1 },
+
+    { "duckstation-qt", NULL,           NULL,   1 << 3, 0, -1 },
+    { "steam",          NULL,           NULL,   1 << 7, 1, -1 }, 
+    
+
+    /* Other */
+    { "mpv",            NULL,           NULL,   1 << 4, 0, -1 },
     { NULL,             "newsboat",     NULL,   1 << 5, 1, -1 },
     { NULL,             "neomutt",      NULL,   1 << 6, 1, -1 },
 
@@ -115,7 +124,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
 	{ MODKEY,                       XK_space,  setlayout,      {.v = &layouts[0]} },
     { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
-    { MODKEY|ShiftMask,             XK_f,      setlayout,      {.v = &layouts[2]} },
+    { MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
   /*{ MODKEY,                       XK_f,      togglefullscr,  {0} },*/
     { MODKEY,                       XK_s,      togglesticky,    {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -130,9 +139,12 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
+    TAGKEYS(                        XK_6,                      5)
     { MODKEY,                       XK_less,    toggleview_scratchpad,         {.ui = 1 << 4 } },
     { MODKEY,                       XK_KP_Down, toggleview_focus,   {.ui = 1 << 5} },
     { MODKEY,                       XK_KP_Next, toggleview_focus,   {.ui = 1 << 6} },
+    { MODKEY,                       XK_KP_Left, spawn,   SHCMD("steamlx") },
+    { MODKEY,                       XK_KP_Left, toggleview_focus,   {.ui = 1 << 7} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
 };
 
