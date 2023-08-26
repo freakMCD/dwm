@@ -19,7 +19,7 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "", "", "", "", "󰇮", "7"};
+static const char *tags[] = { "", "", "󰀻", "", "", "", "󰇮", "󱓞" };
 
 static const Rule rules[] = {
 	/* xprop(1):
@@ -27,32 +27,44 @@ static const Rule rules[] = {
 	 *	WM_NAME(STRING) = title
 	 */
 	/* class            instance        title   tags mask, isfloating, monitor */
-	{ "Zathura",        NULL,           NULL,   1 << 0, 0, -1 },
-    { "qutebrowser",    NULL,           NULL,   1 << 0, 0, -1 },
-    { "st-256color",    "st-256color",  NULL,   1 << 1, 0, -1 },
-    { "qBittorrent",    NULL,           NULL,   1 << 2, 0, -1 },
+    { "qutebrowser", NULL,              NULL, 1 << 0, 0, -1 },
+	{ "Zathura", NULL,                  NULL, 1 << 0, 0, -1 },
+    { "st-256color", "st-256color",     NULL, 1 << 1, 0, -1 },
 
-    /* Gaming */
-    { "darksoulsremastered.exe", NULL,  NULL,   1 << 3, 0, -1 },
-    { "steam_app_815370", NULL,  NULL,   1 << 3, 0, -1 },
+    { "qBittorrent", NULL,              NULL, 1 << 2, 0, -1 },
 
-    { "duckstation-qt", NULL,           NULL,   1 << 3, 0, -1 },
-    { "steam",          NULL,           NULL,   1 << 7, 1, -1 }, 
-    
+    /* Green Hell */
+    { "steam_app_815370", NULL,         NULL, 1 << 3, 0, -1 },
+
+    /* Risk of Rain 2 */
+    { "steam_app_632360", NULL,         NULL, 1 << 3, 0, -1 },
+
+    { "league of legends.exe", NULL,    NULL, 1 << 3, 0, -1},
+    { "grim dawn.exe", NULL,            NULL, 1 << 3, 0, -1},
+    { "devilmaycry5.exe", NULL,         NULL, 1 << 3, 0, -1},
+    { "duckstation-qt", NULL,           NULL, 1 << 3, 0, -1 },
+
+    /* Floating */
+    { NULL, "steamwebhelper",           NULL, 1 << 7, 1, -1 }, 
+    { "Lutris", NULL,                   NULL, 1 << 7, 1, -1},
+    { NULL, "leagueclientux.exe",       NULL, 1 << 7, 1, -1},
+    { NULL, "riotclientux.exe",         NULL, 1 << 7, 1, -1},
+    { NULL, "explorer.exe",             NULL, 1 << 7, 1, -1},
+    { NULL, "r2modman", NULL,                 1 << 7, 1, -1},
 
     /* Other */
-    { "mpv",            NULL,           NULL,   1 << 4, 0, -1 },
-    { NULL,             "newsboat",     NULL,   1 << 5, 1, -1 },
-    { NULL,             "neomutt",      NULL,   1 << 6, 1, -1 },
+    { "mpv", NULL,                      NULL, 1 << 4, 0, -1 },
+    { NULL, "newsboat",                 NULL, 1 << 5, 1, -1 },
+    { NULL, "neomutt",                  NULL, 1 << 6, 1, -1 },
 
-    { NULL,             "launcher",     NULL,   0,      1, -1 },
-    { NULL,             "trans",        NULL,   0,      1, -1 },
+    { NULL, "launcher",                 NULL,      0, 1, -1 },
+    { NULL, "trans",                    NULL,      0, 1, -1 },
 };
 
 static const char sticky_class[] = "mpv";
 
 /* layout(s) */
-static const float mfact     = 0.67; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
@@ -94,7 +106,7 @@ static const char *mpcprev[]    = { "mpc", "prev", NULL };
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-    { 0,                            XF86XK_PowerOff, spawn,    SHCMD("notify-send Apagando...; pkill qutebrowser; pkill zathura; sleep 5; shutdown now") },
+    { MODKEY,                       XK_F4,     spawn,          SHCMD("notify-send Apagando...; pkill qutebrowser; pkill zathura; sleep 2; shutdown now") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD("st -n launcher -g 60x15+600-20 -e ~/bin/startup/launcher-desktop.sh") },
     { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "st -n trans -g 50x12+297+1 -e sh -c 'trans -4 -I'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
@@ -143,7 +155,6 @@ static const Key keys[] = {
     { MODKEY,                       XK_less,    toggleview_scratchpad,         {.ui = 1 << 4 } },
     { MODKEY,                       XK_KP_Down, toggleview_focus,   {.ui = 1 << 5} },
     { MODKEY,                       XK_KP_Next, toggleview_focus,   {.ui = 1 << 6} },
-    { MODKEY,                       XK_KP_Left, spawn,   SHCMD("steamlx") },
     { MODKEY,                       XK_KP_Left, toggleview_focus,   {.ui = 1 << 7} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
 };
