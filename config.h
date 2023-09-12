@@ -33,13 +33,11 @@ static const Rule rules[] = {
 
     { "qBittorrent", NULL,              NULL, 1 << 2, 0, -1 },
 
-    /* Green Hell */
-    { "steam_app_815370", NULL,         NULL, 1 << 3, 0, -1 },
-
     /* Risk of Rain 2 */
     { "steam_app_632360", NULL,         NULL, 1 << 3, 0, -1 },
-
-    { "league of legends.exe", NULL,    NULL, 1 << 3, 0, -1},
+    /* Green Hell */
+    { "steam_app_815370", NULL,         NULL, 1 << 3, 0, -1 },
+    
     { "grim dawn.exe", NULL,            NULL, 1 << 3, 0, -1},
     { "devilmaycry5.exe", NULL,         NULL, 1 << 3, 0, -1},
     { "duckstation-qt", NULL,           NULL, 1 << 3, 0, -1 },
@@ -47,18 +45,16 @@ static const Rule rules[] = {
     /* Floating */
     { NULL, "steamwebhelper",           NULL, 1 << 7, 1, -1 }, 
     { "Lutris", NULL,                   NULL, 1 << 7, 1, -1},
-    { NULL, "leagueclientux.exe",       NULL, 1 << 7, 1, -1},
-    { NULL, "riotclientux.exe",         NULL, 1 << 7, 1, -1},
-    { NULL, "explorer.exe",             NULL, 1 << 7, 1, -1},
     { NULL, "r2modman", NULL,                 1 << 7, 1, -1},
 
     /* Other */
     { "mpv", NULL,                      NULL, 1 << 4, 0, -1 },
     { NULL, "newsboat",                 NULL, 1 << 5, 1, -1 },
     { NULL, "neomutt",                  NULL, 1 << 6, 1, -1 },
-
+    
     { NULL, "launcher",                 NULL,      0, 1, -1 },
     { NULL, "trans",                    NULL,      0, 1, -1 },
+    { NULL, "utilities",                NULL,      0, 1, -1 },
 };
 
 static const char sticky_class[] = "mpv";
@@ -79,7 +75,6 @@ static const Layout layouts[] = {
 /* key definitions */
 #define MODKEY Mod4Mask
 #define ALTGR Mod5Mask 
-#define SCRATCHPAD "xdotool search --onlyvisible --classname trans windowunmap || xdotool search --classname trans windowmap ||"
 
 #define TAGKEYS(KEY,TAG) \
 	{ MODKEY,                       KEY,      view,           {.ui = 1 << TAG} }, \
@@ -107,8 +102,9 @@ static const char *mpcprev[]    = { "mpc", "prev", NULL };
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
     { MODKEY,                       XK_F4,     spawn,          SHCMD("notify-send Apagando...; pkill qutebrowser; pkill zathura; sleep 2; shutdown now") },
-	{ MODKEY,                       XK_p,      spawn,          SHCMD("st -n launcher -g 60x15+600-20 -e ~/bin/startup/launcher-desktop.sh") },
-    { MODKEY,                       XK_KP_End, spawn,          SHCMD(SCRATCHPAD "st -n trans -g 50x12+297+1 -e sh -c 'trans -4 -I'") },
+	{ MODKEY,                       XK_p,      spawn,          SHCMD("~/bin/scratchpad.sh launcher 60x15+600-20 ~/bin/startup/launcher-desktop.sh") },
+	{ MODKEY,                       XK_KP_Begin,      spawn,   SHCMD("~/bin/scratchpad.sh utilities 50x12+297+1 ~/bin/utilities.sh") },
+    { MODKEY,                       XK_KP_End, spawn,          SHCMD("~/bin/scratchpad.sh trans 50x12+297+1 'trans -4 -I'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
     { MODKEY|ControlMask|ShiftMask, XK_Return, spawn,          {.v = termuxcmd } },
     { MODKEY|ShiftMask,             XK_Return, view,           {.ui = 1 << 1 } },
