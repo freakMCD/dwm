@@ -103,7 +103,7 @@ static const Key keys[] = {
 	/* modifier                     key        function        argument */
     { MODKEY,                       XK_F4,     spawn,          SHCMD("notify-send Apagando...; pkill qutebrowser; pkill zathura; sleep 2; shutdown now") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD("~/bin/scratchpad.sh launcher 60x15+600-20 ~/bin/startup/launcher-desktop.sh") },
-	{ MODKEY,                       XK_KP_Begin,      spawn,   SHCMD("~/bin/scratchpad.sh utilities 50x12+297+1 ~/bin/utilities.sh") },
+	{ MODKEY,                       XK_KP_Begin,      spawn,   SHCMD("~/bin/scratchpad.sh utilities 60x15+600-20 ~/bin/utilities.sh") },
     { MODKEY,                       XK_KP_End, spawn,          SHCMD("~/bin/scratchpad.sh trans 50x12+297+1 'trans -4 -I'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
     { MODKEY|ControlMask|ShiftMask, XK_Return, spawn,          {.v = termuxcmd } },
@@ -118,7 +118,7 @@ static const Key keys[] = {
     { 0,                            XK_Print,  spawn,          SHCMD("maim | xclip -selection clipboard -t image/png") },
     { MODKEY,                       XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
     { MODKEY|ShiftMask,             XK_Print,  spawn,          SHCMD("maim -s | xclip -selection clipboard -t image/png") },
-    { ALTGR,                        XK_Print,  spawn,          SHCMD("maim -s ~/Pictures/screenshots/$(date +%s).png") },
+    { ALTGR,                        XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) ~/Pictures/screenshots/$(date +%s).png") },
     
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },

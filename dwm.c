@@ -916,7 +916,7 @@ focus(Client *c)
     XWindowChanges wc;
 
 	if (!c || !ISVISIBLE(c)) {
-		    for (c = selmon->stack; c && (!ISVISIBLE(c) || (c->issticky && !selmon->sel->issticky)); c = c->snext);
+		    for (c = selmon->stack; c && (!ISVISIBLE(c) || c->issticky); c = c->snext);
 
             if (!c) /* No windows found; check for available stickies */
 			        for (c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);	
