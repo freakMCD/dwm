@@ -6,7 +6,7 @@ static const unsigned int snap      = 32;       /* snap pixel */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
-static const char dmenufont[]       = "JetBrainsMono Nerd Font:size=10";
+static const char dmenufont[]       = "JetBrainsMono Nerd Font Mono:size=10";
 static const char col_gray1[]       = "#080808";
 static const char col_gray2[]       = "#212121";
 static const char col_gray3[]       = "#bbbbbb";
@@ -19,42 +19,33 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "󰀻", "", "", "", "󰇮", "󱓞" };
+static const char *tags[] = { "", "", "󰀻", "", "", "󰇮", "", "󱓞" };
 
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class            instance        title   tags mask, isfloating, monitor */
-    { "qutebrowser", NULL,              NULL, 1 << 0, 0, -1 },
+	/* class, instance                  title, tags mask, isfloating, monitor */
 	{ "Zathura", NULL,                  NULL, 1 << 0, 0, -1 },
     { "st-256color", "st-256color",     NULL, 1 << 1, 0, -1 },
-
+    { "qutebrowser", NULL,              NULL, 1 << 2, 0, -1 },
     { "qBittorrent", NULL,              NULL, 1 << 2, 0, -1 },
 
-    /* Risk of Rain 2 */
-    { "steam_app_632360", NULL,         NULL, 1 << 3, 0, -1 },
-    /* Green Hell */
-    { "steam_app_815370", NULL,         NULL, 1 << 3, 0, -1 },
-    
-    { "grim dawn.exe", NULL,            NULL, 1 << 3, 0, -1},
-    { "devilmaycry5.exe", NULL,         NULL, 1 << 3, 0, -1},
-    { "duckstation-qt", NULL,           NULL, 1 << 3, 0, -1 },
+    /* Risk of Rain 2 */    { "steam_app_632360", NULL,         NULL, 1 << 3, 0, -1 },
+    /* Green Hell */        { "steam_app_815370", NULL,         NULL, 1 << 3, 0, -1 },
 
     /* Floating */
     { NULL, "steamwebhelper",           NULL, 1 << 7, 1, -1 }, 
-    { "Lutris", NULL,                   NULL, 1 << 7, 1, -1},
-    { NULL, "r2modman", NULL,                 1 << 7, 1, -1},
+    { NULL, "r2modman",                 NULL, 1 << 7, 1, -1},
 
     /* Other */
     { "mpv", NULL,                      NULL, 1 << 4, 0, -1 },
-    { NULL, "newsboat",                 NULL, 1 << 5, 1, -1 },
-    { NULL, "neomutt",                  NULL, 1 << 6, 1, -1 },
+    { "chatterino", NULL,               NULL, 1 << 4, 0, -1 },
+    { NULL, "neomutt",                  NULL, 1 << 5, 1, -1 },
+    { NULL, "newsraft",                 NULL, 1 << 6, 1, -1 },
     
-    { NULL, "launcher",                 NULL,      0, 1, -1 },
-    { NULL, "trans",                    NULL,      0, 1, -1 },
-    { NULL, "utilities",                NULL,      0, 1, -1 },
+    { "scratchpad", NULL,               NULL,      0, 1, -1 },
 };
 
 static const char sticky_class[] = "mpv";
@@ -89,7 +80,6 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]   = { "dmenu_run", NULL };
 static const char *termcmd[]    = { "st", NULL };
-static const char *termuxcmd[]  = { "st", "-e", "tmux", NULL };
 static const char *mpcnext[]    = { "mpc", "next", NULL };
 static const char *mpctoggle[]  = { "mpc", "toggle", NULL };
 static const char *mpcprev[]    = { "mpc", "prev", NULL };
@@ -104,9 +94,8 @@ static const Key keys[] = {
     { MODKEY,                       XK_F4,     spawn,          SHCMD("notify-send Apagando...; pkill qutebrowser; pkill zathura; sleep 2; shutdown now") },
 	{ MODKEY,                       XK_p,      spawn,          SHCMD("~/bin/scratchpad.sh launcher 60x15+600-20 ~/bin/startup/launcher-desktop.sh") },
 	{ MODKEY,                       XK_KP_Begin,      spawn,   SHCMD("~/bin/scratchpad.sh utilities 60x15+600-20 ~/bin/utilities.sh") },
-    { MODKEY,                       XK_KP_End, spawn,          SHCMD("~/bin/scratchpad.sh trans 50x12+297+1 'trans -4 -I'") },
+    { MODKEY,                       XK_KP_End, spawn,          SHCMD("~/bin/scratchpad.sh trans 50x12-200+0 'trans -4 -I'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-    { MODKEY|ControlMask|ShiftMask, XK_Return, spawn,          {.v = termuxcmd } },
     { MODKEY|ShiftMask,             XK_Return, view,           {.ui = 1 << 1 } },
     { ALTGR,                        XK_p,      spawn,          {.v = mpctoggle } },
     { ALTGR,                        XK_Right,  spawn,          {.v = mpcnext } },
@@ -116,9 +105,11 @@ static const Key keys[] = {
     { ALTGR,                        XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mute; kill -RTMIN $(cat ~/.cache/pidofbar)") },
     { MODKEY,                       XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mic") },
     { 0,                            XK_Print,  spawn,          SHCMD("maim | xclip -selection clipboard -t image/png") },
-    { MODKEY,                       XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
-    { MODKEY|ShiftMask,             XK_Print,  spawn,          SHCMD("maim -s | xclip -selection clipboard -t image/png") },
-    { ALTGR,                        XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) ~/Pictures/screenshots/$(date +%s).png") },
+    { ShiftMask,                    XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
+    { ControlMask,                  XK_Print,  spawn,          SHCMD("maim -s | xclip -selection clipboard -t image/png") },
+    { MODKEY,                       XK_Print,  spawn,          SHCMD("maim ~/Pictures/screenshots/$(date +%s).png") },
+    { MODKEY|ShiftMask,             XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) ~/Pictures/screenshots/$(date +%s).png") },
+    { MODKEY|ControlMask,           XK_Print,  spawn,          SHCMD("maim -s ~/Pictures/screenshots/$(date +%s).png") },
     
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
