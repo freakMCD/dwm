@@ -1,21 +1,22 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const int showbar            = 1;        /* 0 means no bar */
+static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font Mono:size=10";
-static const char col_gray1[]       = "#080808";
-static const char col_gray2[]       = "#212121";
-static const char col_gray3[]       = "#bbbbbb";
-static const char col_gray4[]       = "#dddddd";
-static const char col_cyan[]        = "#007799";
+static const char col_gray1[]       = "#1E1D2D";
+static const char col_gray2[]       = "#282737";
+static const char col_gray3[]       = "#585767";
+static const char col_gray4[]       = "#282737";
+static const char col_cyan[]        = "#96CDFB";
+
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
 	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
+	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan },
 };
 
 /* tagging */
@@ -34,6 +35,9 @@ static const Rule rules[] = {
 
     /* Risk of Rain 2 */    { "steam_app_632360", NULL,         NULL, 1 << 3, 0, -1 },
     /* Green Hell */        { "steam_app_815370", NULL,         NULL, 1 << 3, 0, -1 },
+    /* Project Zomboid */   { "Project Zomboid", NULL,         NULL, 1 << 3, 0, -1 },
+    /* Hollow Knight */     { "hollow_knight.x86_64", NULL,         NULL, 1 << 3, 0, -1 },
+    /* Deep Rock Galactic */        { "steam_app_548430", NULL,         NULL, 1 << 3, 0, -1 },
 
     /* Floating */
     { NULL, "steamwebhelper",           NULL, 1 << 7, 1, -1 }, 
@@ -41,7 +45,6 @@ static const Rule rules[] = {
 
     /* Other */
     { "mpv", NULL,                      NULL, 1 << 4, 0, -1 },
-    { "chatterino", NULL,               NULL, 1 << 4, 0, -1 },
     { NULL, "neomutt",                  NULL, 1 << 5, 1, -1 },
     { NULL, "newsraft",                 NULL, 1 << 6, 1, -1 },
     
@@ -52,14 +55,14 @@ static const char sticky_class[] = "mpv";
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
-static const int nmaster     = 1;    /* number of clients in master area */
+static const int nmaster     = 2;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-	{ "[]=",      tile },    /* first entry is default */
-	{ "[M]",      monocle },
+    { "[]=",      tile },  /* first entry is default */
+    { "[M]",      monocle },
 	{ "><>",      NULL },    /* no layout function means floating behavior */
 };
 
