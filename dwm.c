@@ -168,6 +168,7 @@ static int drawstatusbar(Monitor *m, int bh, char* text);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
+static void focusdefault(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
@@ -912,14 +913,37 @@ expose(XEvent *e)
 void
 focus(Client *c)
 {
+	if (!c || !ISVISIBLE(c))
+		for (c = selmon->stack; c && (!ISVISIBLE(c) || c->issticky); c = c->snext);
+	if (!c || !ISVISIBLE(c))
+		for (c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
 
-	if (!c || !ISVISIBLE(c)) {
-		for (c = selmon->stack; c && (!ISVISIBLE(c) || (c->issticky && !selmon->sel->issticky)); c = c->snext);
-		if (!c) /* No windows found; check for available stickies */
-			for (c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
+    if (selmon->sel && selmon->sel != c)
+		unfocus(selmon->sel, 0);
+	if (c) {
+		if (c->mon != selmon)
+			selmon = c->mon;
+		if (c->isurgent)
+			seturgent(c, 0);
+		detachstack(c);
+		attachstack(c);
+		grabbuttons(c, 1);
+		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+		setfocus(c);
+	} else {
+		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
+		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
 	}
+	selmon->sel = c;
+	drawbars();
+}
 
+void
+focusdefault(Client *c)
+{
 
+    if (!c || !ISVISIBLE(c))
+        for (c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
     if (selmon->sel && selmon->sel != c)
 		unfocus(selmon->sel, 0);
 	if (c) {
