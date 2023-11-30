@@ -7,7 +7,7 @@ static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font Mono:size=10";
-static const char col_gray1[]       = "#1E1D2D";
+static const char col_gray1[]       = "#11111B";
 static const char col_gray2[]       = "#282737";
 static const char col_gray3[]       = "#585767";
 static const char col_gray4[]       = "#282737";
@@ -55,15 +55,17 @@ static const char sticky_class[] = "mpv";
 
 /* layout(s) */
 static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
-static const int nmaster     = 2;    /* number of clients in master area */
+static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
+#include "gaplessgrid.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
-    { "[]=",      tile },  /* first entry is default */
+    /* first entry is default */
+    { "HHH",      gaplessgrid },
+    { "[]=",      tile },
     { "[M]",      monocle },
-	{ "><>",      NULL },    /* no layout function means floating behavior */
 };
 
 /* key definitions */
@@ -91,6 +93,7 @@ static const char *mpcprev[]    = { "mpc", "prev", NULL };
 #include "toggleview_focus.c"
 #include "togglefullscr.c"
 #include "toggleview_scratchpad.c"
+#include "movestack.c"
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
@@ -117,6 +120,8 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
 	{ MODKEY,                       XK_k,      focusstack,     {.i = -1 } },
+    { MODKEY|ShiftMask,             XK_j,      movestack,      {.i = +1 } },
+    { MODKEY|ShiftMask,             XK_k,      movestack,      {.i = -1 } },
 	{ MODKEY,                       XK_i,      incnmaster,     {.i = +1 } },
 	{ MODKEY,                       XK_d,      incnmaster,     {.i = -1 } },
 	{ MODKEY,                       XK_h,      setmfact,       {.f = -0.05} },
@@ -124,8 +129,9 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_Return, zoom,           {0} },
 	{ MODKEY,                       XK_Tab,    view,           {0} },
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
-	{ MODKEY,                       XK_space,  setlayout,      {.v = &layouts[0]} },
-    { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+    { MODKEY,                       XK_g,      setlayout,      {.v = &layouts[0]} },
+	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },
+    { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
     { MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
   /*{ MODKEY,                       XK_f,      togglefullscr,  {0} },*/
     { MODKEY,                       XK_s,      togglesticky,    {0} },
