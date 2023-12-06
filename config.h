@@ -22,6 +22,13 @@ static const char *colors[][3]      = {
 /* tagging */
 static const char *tags[] = { "", "", "󰀻", "", "", "󰇮", "", "󱓞" };
 
+static char * scratchpads[] = {
+	/* name */
+    "mpv",
+	"neomutt",
+	"newsraft",
+};
+
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
@@ -44,9 +51,9 @@ static const Rule rules[] = {
     { NULL, "r2modman",                 NULL, 1 << 7, 1, -1},
 
     /* Other */
-    { "mpv", NULL,                      NULL, 1 << 4, 0, -1 },
-    { NULL, "neomutt",                  NULL, 1 << 5, 1, -1 },
-    { NULL, "newsraft",                 NULL, 1 << 6, 1, -1 },
+    { "mpv", NULL,                      NULL, SPTAG(0), 0, -1 },
+    { NULL, "neomutt",                  NULL, SPTAG(1), 1, -1 },
+    { NULL, "newsraft",                 NULL, SPTAG(2), 1, -1 },
     
     { "scratchpad", NULL,               NULL,      0, 1, -1 },
 };
@@ -90,7 +97,6 @@ static const char *mpctoggle[]  = { "mpc", "toggle", NULL };
 static const char *mpcprev[]    = { "mpc", "prev", NULL };
 
 #include <X11/XF86keysym.h>
-#include "toggleview_focus.c"
 #include "togglefullscr.c"
 #include "toggleview_scratchpad.c"
 #include "movestack.c"
@@ -131,9 +137,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
     { MODKEY,                       XK_g,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },
-    { MODKEY,                       XK_f,      setlayout,      {.v = &layouts[2]} },
-    { MODKEY|ShiftMask,             XK_f,      togglefullscr,  {0} },
-  /*{ MODKEY,                       XK_f,      togglefullscr,  {0} },*/
+    { MODKEY,                       XK_f,      togglefullscr,  {0} },
     { MODKEY,                       XK_s,      togglesticky,    {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -148,10 +152,10 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
     TAGKEYS(                        XK_6,                      5)
-    { MODKEY,                       XK_less,    toggleview_scratchpad,         {.ui = 1 << 4 } },
-    { MODKEY,                       XK_KP_Down, toggleview_focus,   {.ui = 1 << 5} },
-    { MODKEY,                       XK_KP_Next, toggleview_focus,   {.ui = 1 << 6} },
-    { MODKEY,                       XK_KP_Left, toggleview_focus,   {.ui = 1 << 7} },
+    { MODKEY,                       XK_less,    toggleview_scratchpad,         {.ui = 0} },
+    { MODKEY,                       XK_KP_Down, toggleview_scratchpad,   {.ui = 1} },
+    { MODKEY,                       XK_KP_Next, toggleview_scratchpad,   {.ui = 2} },
+    { MODKEY,                       XK_KP_Left, toggleview,   {.ui = 1 << 7} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
 };
 
