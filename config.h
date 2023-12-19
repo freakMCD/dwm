@@ -3,6 +3,11 @@
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
+static const unsigned int gappih    = 5;       /* horiz inner gap between windows */
+static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
+static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
+static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
+static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 0;        /* 0 means no bar */
 static const int topbar             = 0;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
@@ -25,8 +30,8 @@ static const char *tags[] = { "", "", "󰀻", "", "", "󰇮", "",
 static char * scratchpads[] = {
 	/* name */
     "mpv",
-	"neomutt",
-	"newsraft",
+    "neomutt",
+    "newsraft",
 };
 
 static const Rule rules[] = {
@@ -61,16 +66,18 @@ static const Rule rules[] = {
 static const char sticky_class[] = "mpv";
 
 /* layout(s) */
-static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.7; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
+ 
+#include "vanitygaps.c"
+
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
 
-#include "gaplessgrid.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
     /* first entry is default */
-    { "HHH",      gaplessgrid },
+    { ":::",      gaplessgrid },
     { "[]=",      tile },
     { "[M]",      monocle },
 };
@@ -98,7 +105,7 @@ static const char *mpcprev[]    = { "mpc", "prev", NULL };
 
 #include <X11/XF86keysym.h>
 #include "togglefullscr.c"
-#include "toggleview_scratchpad.c"
+#include "togglescratchpad.c"
 #include "movestack.c"
 
 static const Key keys[] = {
@@ -152,7 +159,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_4,                      3)
 	TAGKEYS(                        XK_5,                      4)
     TAGKEYS(                        XK_6,                      5)
-    { MODKEY,                       XK_less,    toggleview_scratchpad,         {.ui = 0} },
+    { MODKEY,                       XK_less,    toggleview_scratchpad,   {.ui = 0} },
     { MODKEY,                       XK_KP_Down, toggleview_scratchpad,   {.ui = 1} },
     { MODKEY,                       XK_KP_Next, toggleview_scratchpad,   {.ui = 2} },
     { MODKEY,                       XK_KP_Left, toggleview,   {.ui = 1 << 7} },

@@ -123,6 +123,10 @@ struct Monitor {
 	int by;               /* bar geometry */
 	int mx, my, mw, mh;   /* screen size */
 	int wx, wy, ww, wh;   /* window area  */
+	int gappih;           /* horizontal gap between windows */
+	int gappiv;           /* vertical gap between windows */
+	int gappoh;           /* horizontal outer gaps */
+	int gappov;           /* vertical outer gaps */
 	unsigned int seltags;
 	unsigned int sellt;
 	unsigned int tagset[2];
@@ -419,11 +423,11 @@ arrangemon(Monitor *m)
 void
 attach(Client *c)
 {   
-    if (c->issticky) {
+    if (c->ismpv) {
         Client **tc;
-    	c->next = NULL;
-    	for (tc = &c->mon->clients; *tc; tc = &(*tc)->next);
-    	*tc = c;
+       c->next = NULL;
+       for (tc = &c->mon->clients; *tc; tc = &(*tc)->next);
+       *tc = c;
         return;
     }
     c->next = c->mon->clients;
@@ -673,6 +677,10 @@ createmon(void)
 	m->nmaster = nmaster;
 	m->showbar = showbar;
 	m->topbar = topbar;
+	m->gappih = gappih;
+	m->gappiv = gappiv;
+	m->gappoh = gappoh;
+	m->gappov = gappov;
 	m->lt[0] = &layouts[0];
 	m->lt[1] = &layouts[1 % LENGTH(layouts)];
 	strncpy(m->ltsymbol, layouts[0].symbol, sizeof m->ltsymbol);
@@ -918,7 +926,7 @@ void
 focus(Client *c)
 {
 	if (!c || !ISVISIBLE(c))
-		for (c = selmon->stack; c && (!ISVISIBLE(c) || c->ismpv); c = c->snext);
+		for (c = selmon->stack; c && (!ISVISIBLE(c) || (c->ismpv && !c->isfullscreen)); c = c->snext);
 	if (!c || !ISVISIBLE(c))
 		for (c = selmon->stack; c && !ISVISIBLE(c) ; c = c->snext);
 
@@ -997,7 +1005,7 @@ focusstack(const Arg *arg)
 {
 	Client *c = NULL, *i;
 
-	if (!selmon->sel || (selmon->sel->isfullscreen && lockfullscreen))
+	if (!selmon->sel || (selmon->sel->isfullscreen && lockfullscreen)) 
 		return;
 	if (arg->i > 0) {
 		for (c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
@@ -1370,7 +1378,7 @@ void
 pop(Client *c)
 {
 	detach(c);
-	attach(c);
+    attach(c);
 	focus(c);
 	arrange(c->mon);
 }
@@ -1820,12 +1828,19 @@ showhide(Client *c)
 void
 spawn(const Arg *arg)
 {
+	struct sigaction sa;
+
 	if (arg->v == dmenucmd)
 		dmenumon[0] = '0' + selmon->num;
 	if (fork() == 0) {
 		if (dpy)
 			close(ConnectionNumber(dpy));
 		setsid();
+		sigemptyset(&sa.sa_mask);
+		sa.sa_flags = 0;
+		sa.sa_handler = SIG_DFL;
+		sigaction(SIGCHLD, &sa, NULL);
+
 		execvp(((char **)arg->v)[0], (char **)arg->v);
 		die("dwm: execvp '%s' failed:", ((char **)arg->v)[0]);
 	}
