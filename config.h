@@ -3,29 +3,24 @@
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const unsigned int gappih    = 5;       /* horiz inner gap between windows */
-static const unsigned int gappiv    = 10;       /* vert inner gap between windows */
-static const unsigned int gappoh    = 10;       /* horiz outer gap between windows and screen edge */
-static const unsigned int gappov    = 10;       /* vert outer gap between windows and screen edge */
-static       int smartgaps          = 0;        /* 1 means no outer gap when there is only one window */
 static const int showbar            = 0;        /* 0 means no bar */
-static const int topbar             = 0;        /* 0 means bottom bar */
+static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font Mono:size=10";
-static const char col_gray1[]       = "#11111B";
-static const char col_gray2[]       = "#282737";
-static const char col_gray3[]       = "#585767";
-static const char col_gray4[]       = "#282737";
-static const char col_cyan[]        = "#96CDFB";
+static const char col_gray1[]       = "#141617";
+static const char col_gray2[]       = "#141617";
+static const char col_gray3[]       = "#d4be98";
+static const char col_gray4[]       = "#141617";
+static const char col_cyan[]        = "#fabd2f";
 
 static const char *colors[][3]      = {
 	/*               fg         bg         border   */
-	[SchemeNorm] = { col_gray3, col_gray1, col_gray2 },
-	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan },
+	[SchemeNorm] = { col_gray3, col_gray1, col_gray1 },
+	[SchemeSel]  = { col_gray1, col_cyan,  col_cyan },
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "󰀻", "", "", "󰇮", "", "󱓞" };
+static const char *tags[] = { "", "", "󰀻", "", "", "󰇮", "", "󱓞" };
 
 static char * scratchpads[] = {
 	/* name */
@@ -69,11 +64,9 @@ static const char sticky_class[] = "mpv";
 static const float mfact     = 0.7; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
- 
-#include "vanitygaps.c"
-
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
-
+ 
+#include "gaplessgrid.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
     /* first entry is default */
