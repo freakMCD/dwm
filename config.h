@@ -20,7 +20,16 @@ static const char *colors[][3]      = {
 };
 
 /* tagging */
-static const char *tags[] = { "", "", "󰀻", "", "", "󰇮", "", "󱓞" };
+static const char *tags[] = { "", "", "󰀻", "", "󱓞" };
+
+static const MonitorRule monrules[] = {
+	/* monitor  tag  layout  mfact  nmaster  showbar  topbar */
+	{  -1,      1, 2,      -1,    -1,      1,      -1     }, 
+	{  -1,      2, 0,      -1,    -1,      0,      -1     }, 
+	{  -1,      3, 0,      -1,    -1,      0,      -1     }, 
+	{  -1,      4, 0,      -1,    -1,      0,      -1     }, 
+	{  -1,      5, 0,      -1,    -1,      0,      -1     }, 
+};
 
 static char * scratchpads[] = {
 	/* name */
@@ -36,6 +45,7 @@ static const Rule rules[] = {
 	 */
 	/* class, instance                  title, tags mask, isfloating, monitor */
 	{ "Zathura", NULL,                  NULL, 1 << 0, 0, -1 },
+	{ "PPSSPPSDL", NULL,                NULL, 1 << 0, 0, -1 },
     { "st-256color", "st-256color",     NULL, 1 << 1, 0, -1 },
     { "qutebrowser", NULL,              NULL, 1 << 2, 0, -1 },
     { "qBittorrent", NULL,              NULL, 1 << 2, 0, -1 },
@@ -47,8 +57,8 @@ static const Rule rules[] = {
     /* Deep Rock Galactic */        { "steam_app_548430", NULL,         NULL, 1 << 3, 0, -1 },
 
     /* Floating */
-    { NULL, "steamwebhelper",           NULL, 1 << 7, 1, -1 }, 
-    { NULL, "r2modman",                 NULL, 1 << 7, 1, -1},
+    { NULL, "steamwebhelper",           NULL, 1 << 4, 1, -1 }, 
+    { NULL, "r2modman",                 NULL, 1 << 4, 1, -1},
 
     /* Other */
     { "mpv", NULL,                      NULL, SPTAG(0), 0, -1 },
@@ -150,12 +160,10 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
-	TAGKEYS(                        XK_5,                      4)
-    TAGKEYS(                        XK_6,                      5)
     { MODKEY,                       XK_less,    toggleview_scratchpad,   {.ui = 0} },
     { MODKEY,                       XK_KP_Down, toggleview_scratchpad,   {.ui = 1} },
     { MODKEY,                       XK_KP_Next, toggleview_scratchpad,   {.ui = 2} },
-    { MODKEY,                       XK_KP_Left, toggleview,   {.ui = 1 << 7} },
+    { MODKEY,                       XK_KP_Left, toggleview,   {.ui = 1 << 4} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
 };
 
