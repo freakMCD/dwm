@@ -3,7 +3,7 @@
 /* appearance */
 static const unsigned int borderpx  = 1;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
-static const int showbar            = 0;        /* 0 means no bar */
+static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 static const char *fonts[]          = { "JetBrainsMono Nerd Font:size=9:style=bold" };
 static const char dmenufont[]       = "JetBrainsMono Nerd Font Mono:size=10";
@@ -24,11 +24,11 @@ static const char *tags[] = { "", "", "󰀻", "", "󱓞" };
 
 static const MonitorRule monrules[] = {
 	/* monitor  tag  layout  mfact  nmaster  showbar  topbar */
-	{  -1,      1, 2,      -1,    -1,      1,      -1     }, 
-	{  -1,      2, 0,      -1,    -1,      0,      -1     }, 
-	{  -1,      3, 0,      -1,    -1,      0,      -1     }, 
-	{  -1,      4, 0,      -1,    -1,      0,      -1     }, 
-	{  -1,      5, 0,      -1,    -1,      0,      -1     }, 
+	{  -1,      1, 1,      -1,    -1,      -1,      -1     }, 
+	{  -1,      2, 0,      -1,    -1,      -1,      -1     }, 
+	{  -1,      3, 0,      -1,    -1,      -1,      -1     }, 
+	{  -1,      4, 0,      -1,    -1,      -1,      -1     }, 
+	{  -1,      5, 0,      -1,    -1,      -1,      -1     }, 
 };
 
 static char * scratchpads[] = {
@@ -43,35 +43,37 @@ static const Rule rules[] = {
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class, instance                  title, tags mask, isfloating, monitor */
-	{ "Zathura", NULL,                  NULL, 1 << 0, 0, -1 },
-	{ "PPSSPPSDL", NULL,                NULL, 1 << 0, 0, -1 },
-    { "st-256color", "st-256color",     NULL, 1 << 1, 0, -1 },
-    { "qutebrowser", NULL,              NULL, 1 << 2, 0, -1 },
-    { "qBittorrent", NULL,              NULL, 1 << 2, 0, -1 },
+	/* class, instance, title,              tags mask, isfloating, monitor */
+	{ "Zathura", NULL, NULL,                1 << 0, 0, -1 },
+	{ "PPSSPPSDL", NULL, NULL,              1 << 0, 0, -1 },
+    { "st-256color", "st-256color", NULL,   1 << 1, 0, -1 },
+    { "qutebrowser", NULL, NULL,            1 << 2, 0, -1 },
+    { "qBittorrent", NULL, NULL,            1 << 2, 0, -1 },
 
-    /* Risk of Rain 2 */    { "steam_app_632360", NULL,         NULL, 1 << 3, 0, -1 },
-    /* Green Hell */        { "steam_app_815370", NULL,         NULL, 1 << 3, 0, -1 },
-    /* Project Zomboid */   { "Project Zomboid", NULL,         NULL, 1 << 3, 0, -1 },
-    /* Hollow Knight */     { "hollow_knight.x86_64", NULL,         NULL, 1 << 3, 0, -1 },
-    /* Deep Rock Galactic */        { "steam_app_548430", NULL,         NULL, 1 << 3, 0, -1 },
+    /* Risk of Rain 2 */    { "steam_app_632360", NULL, NULL,       1 << 3, 0, -1 },
+    /* Green Hell */        { "steam_app_815370", NULL, NULL,       1 << 3, 0, -1 },
+    /* Project Zomboid */   { "Project Zomboid", NULL, NULL,        1 << 3, 0, -1 },
+    /* Hollow Knight */     { "hollow_knight.x86_64", NULL, NULL,   1 << 3, 0, -1 },
+    /* Deep Rock Galactic */{ "steam_app_548430", NULL, NULL,       1 << 3, 0, -1 },
+    /* Outward DE */        { "steam_app_794260", NULL, NULL,       1 << 3, 0, -1 },
 
     /* Floating */
-    { NULL, "steamwebhelper",           NULL, 1 << 4, 1, -1 }, 
-    { NULL, "r2modman",                 NULL, 1 << 4, 1, -1},
+    { NULL, "steamwebhelper", NULL,         1 << 4, 1, -1 }, 
+    { NULL, "r2modman", NULL,               1 << 4, 1, -1 },
 
     /* Other */
-    { "mpv", NULL,                      NULL, SPTAG(0), 0, -1 },
-    { NULL, "neomutt",                  NULL, SPTAG(1), 1, -1 },
-    { NULL, "newsraft",                 NULL, SPTAG(2), 1, -1 },
+    { "mpv", NULL, NULL,                    SPTAG(0), 0, -1 },
+    { NULL, "neomutt", NULL,                SPTAG(1), 1, -1 },
+    { NULL, "newsraft", NULL,               SPTAG(2), 1, -1 },
     
-    { "scratchpad", NULL,               NULL,      0, 1, -1 },
+    { "scratchpad", NULL, NULL,             0, 1, -1 },
+    { "scratchpad", "st-floating", NULL,    0, 1, -1 },
 };
 
 static const char sticky_class[] = "mpv";
 
 /* layout(s) */
-static const float mfact     = 0.7; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.6; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
@@ -114,17 +116,18 @@ static const char *mpcprev[]    = { "mpc", "prev", NULL };
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
     { MODKEY,                       XK_F4,     spawn,          SHCMD("notify-send Apagando...; pkill qutebrowser; pkill zathura; sleep 2; shutdown now") },
-	{ MODKEY,                       XK_p,      spawn,          SHCMD("~/bin/scratchpad.sh launcher 60x15+600-20 ~/bin/startup/launcher-desktop.sh") },
-	{ MODKEY,                       XK_KP_Begin,      spawn,   SHCMD("~/bin/scratchpad.sh utilities 60x15+600-20 ~/bin/utilities.sh") },
+    { MODKEY,                       XK_p,      spawn,          SHCMD("~/bin/scratchpad.sh launcher 60x15+600-20 ~/bin/startup/launcher-desktop.sh") },
+    { MODKEY,                       XK_KP_Home,         spawn, SHCMD("~/bin/scratchpad.sh st-floating 100x24+0+0") },
+    { MODKEY,                       XK_KP_Begin,        spawn, SHCMD("~/bin/scratchpad.sh utilities 60x15+600-20 ~/bin/utilities.sh") },
     { MODKEY,                       XK_KP_End, spawn,          SHCMD("~/bin/scratchpad.sh trans 50x12-200+0 'trans -4 -I'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
     { MODKEY|ShiftMask,             XK_Return, view,           {.ui = 1 << 1 } },
     { ALTGR,                        XK_p,      spawn,          {.v = mpctoggle } },
     { ALTGR,                        XK_Right,  spawn,          {.v = mpcnext } },
     { ALTGR,                        XK_Left,   spawn,          {.v = mpcprev } },
-    { ALTGR,                        XK_Up,     spawn,          SHCMD("~/bin/startup/volume_notif.sh up; kill -RTMIN $(cat ~/.cache/pidofbar)") },
-    { ALTGR,                        XK_Down,   spawn,          SHCMD("~/bin/startup/volume_notif.sh down; kill -RTMIN $(cat ~/.cache/pidofbar)") },
-    { ALTGR,                        XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mute; kill -RTMIN $(cat ~/.cache/pidofbar)") },
+    { ALTGR,                        XK_Up,     spawn,          SHCMD("~/bin/startup/volume_notif.sh up") },
+    { ALTGR,                        XK_Down,   spawn,          SHCMD("~/bin/startup/volume_notif.sh down") },
+    { ALTGR,                        XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mute") },
     { MODKEY,                       XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mic") },
     { 0,                            XK_Print,  spawn,          SHCMD("maim | xclip -selection clipboard -t image/png") },
     { ShiftMask,                    XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
@@ -147,6 +150,7 @@ static const Key keys[] = {
 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
     { MODKEY,                       XK_g,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },
+	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
     { MODKEY,                       XK_f,      togglefullscr,  {0} },
     { MODKEY,                       XK_s,      togglesticky,    {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
@@ -160,9 +164,11 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
+
     { MODKEY,                       XK_less,    toggleview_scratchpad,   {.ui = 0} },
     { MODKEY,                       XK_KP_Down, toggleview_scratchpad,   {.ui = 1} },
     { MODKEY,                       XK_KP_Next, toggleview_scratchpad,   {.ui = 2} },
+
     { MODKEY,                       XK_KP_Left, toggleview,   {.ui = 1 << 4} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
 };
