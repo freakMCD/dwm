@@ -442,10 +442,10 @@ void
 attach(Client *c)
 {   
     if (c->ismpv) {
-        Client **tc;
-       c->next = NULL;
-       for (tc = &c->mon->clients; *tc; tc = &(*tc)->next);
-       *tc = c;
+        Client *tc;
+        for (tc = c->mon->clients; tc->next && !tc->next->ismpv; tc = tc->next);
+        c->next = tc->next;
+        tc->next = c;
         return;
     }
     c->next = c->mon->clients;
@@ -2436,8 +2436,15 @@ zoom(const Arg *arg)
 
 	if (!selmon->lt[selmon->sellt]->arrange || !c || c->isfloating)
 		return;
-	if (c == nexttiled(selmon->clients) && !(c = nexttiled(c->next)))
-		return;
+
+    if (c->ismpv) {
+        Client *tc;
+        for (tc = c->mon->clients; tc && !tc->ismpv; tc = tc->next);
+        if (c == tc && !(c = nexttiled(c->next))) 
+            return;
+    }
+    else if (c == nexttiled(selmon->clients) && ( !(c = nexttiled(c->next)) || c->ismpv))
+	    return;
 	pop(c);
 }
 

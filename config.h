@@ -73,7 +73,7 @@ static const Rule rules[] = {
 static const char sticky_class[] = "mpv";
 
 /* layout(s) */
-static const float mfact     = 0.6; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.7; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
@@ -104,37 +104,15 @@ static const Layout layouts[] = {
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
 static const char *dmenucmd[]   = { "dmenu_run", NULL };
 static const char *termcmd[]    = { "st", NULL };
-static const char *mpcnext[]    = { "mpc", "next", NULL };
-static const char *mpctoggle[]  = { "mpc", "toggle", NULL };
-static const char *mpcprev[]    = { "mpc", "prev", NULL };
 
-#include <X11/XF86keysym.h>
 #include "togglefullscr.c"
 #include "togglescratchpad.c"
 #include "movestack.c"
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-    { MODKEY,                       XK_F4,     spawn,          SHCMD("notify-send Apagando...; pkill qutebrowser; pkill zathura; sleep 2; shutdown now") },
-    { MODKEY,                       XK_p,      spawn,          SHCMD("~/bin/scratchpad.sh launcher 60x15+600-20 ~/bin/startup/launcher-desktop.sh") },
-    { MODKEY,                       XK_KP_Home,         spawn, SHCMD("~/bin/scratchpad.sh st-floating 100x24+0+0") },
-    { MODKEY,                       XK_KP_Begin,        spawn, SHCMD("~/bin/scratchpad.sh utilities 60x15+600-20 ~/bin/utilities.sh") },
-    { MODKEY,                       XK_KP_End, spawn,          SHCMD("~/bin/scratchpad.sh trans 50x12-200+0 'trans -4 -I'") },
     { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
     { MODKEY|ShiftMask,             XK_Return, view,           {.ui = 1 << 1 } },
-    { ALTGR,                        XK_p,      spawn,          {.v = mpctoggle } },
-    { ALTGR,                        XK_Right,  spawn,          {.v = mpcnext } },
-    { ALTGR,                        XK_Left,   spawn,          {.v = mpcprev } },
-    { ALTGR,                        XK_Up,     spawn,          SHCMD("~/bin/startup/volume_notif.sh up") },
-    { ALTGR,                        XK_Down,   spawn,          SHCMD("~/bin/startup/volume_notif.sh down") },
-    { ALTGR,                        XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mute") },
-    { MODKEY,                       XK_Delete, spawn,          SHCMD("~/bin/startup/volume_notif.sh mic") },
-    { 0,                            XK_Print,  spawn,          SHCMD("maim | xclip -selection clipboard -t image/png") },
-    { ShiftMask,                    XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) | xclip -selection clipboard -t image/png") },
-    { ControlMask,                  XK_Print,  spawn,          SHCMD("maim -s | xclip -selection clipboard -t image/png") },
-    { MODKEY,                       XK_Print,  spawn,          SHCMD("maim ~/Pictures/screenshots/$(date +%s).png") },
-    { MODKEY|ShiftMask,             XK_Print,  spawn,          SHCMD("maim -i $(xdotool getactivewindow) ~/Pictures/screenshots/$(date +%s).png") },
-    { MODKEY|ControlMask,           XK_Print,  spawn,          SHCMD("maim -s ~/Pictures/screenshots/$(date +%s).png") },
     
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
