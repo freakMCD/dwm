@@ -54,10 +54,8 @@
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
 #define WIDTH(X)                ((X)->w + 2 * (X)->bw)
 #define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
-#define NUMTAGS					(LENGTH(tags) + LENGTH(scratchpads))
-#define TAGMASK     			((1 << NUMTAGS) - 1)
-#define SPTAG(i) 				((1 << LENGTH(tags)) << (i))
-#define SPTAGMASK   			(((1 << LENGTH(scratchpads))-1) << LENGTH(tags))
+#define TAGMASK                 ((1 << (LENGTH(tags) + 1)) - 1)
+#define SPTAG                   (1 << LENGTH(tags))
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
 
 /* enums */
@@ -337,15 +335,15 @@ applyrules(Client *c)
 				c->mon = m;
 		}
 	}
-     if (strstr(class, sticky_class)) {
-         setsticky(c ,1);
+    if (strstr(class, sticky_class)) {
+         setsticky(c,1);
          c->ismpv = 1;
-     }
+    }
 	if (ch.res_class)
 		XFree(ch.res_class);
 	if (ch.res_name)
 		XFree(ch.res_name);
-	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : (c->mon->tagset[c->mon->seltags] & ~SPTAGMASK);
+	c->tags = c->tags & TAGMASK ? c->tags & TAGMASK : (c->mon->tagset[c->mon->seltags] ^ SPTAG);
 }
 
 int
@@ -443,13 +441,17 @@ attach(Client *c)
 {   
     if (c->ismpv) {
         Client *tc;
-        for (tc = c->mon->clients; tc->next && !tc->next->ismpv; tc = tc->next);
-        c->next = tc->next;
-        tc->next = c;
+        for (tc = c->mon->clients; tc && tc->next && !tc->next->ismpv; tc = tc->next);
+        c->next = tc ? tc->next : NULL;
+        if (tc) {
+            tc->next = c;
+        } else {
+            c->mon->clients = c;  /* Set c as the first client on the list if no mpv windows found */
+        }
         return;
     }
     c->next = c->mon->clients;
-	c->mon->clients = c;
+    c->mon->clients = c;
 }
 
 void
@@ -753,8 +755,8 @@ destroynotify(XEvent *e)
 	Client *c;
 	XDestroyWindowEvent *ev = &e->xdestroywindow;
 
-	if ((c = wintoclient(ev->window)))
-		unmanage(c, 1);
+    if ((c = wintoclient(ev->window)))
+        unmanage(c, 1);
 }
 
 void
@@ -986,7 +988,7 @@ void
 focus(Client *c)
 {
 	if (!c || !ISVISIBLE(c))
-		for (c = selmon->stack; c && (!ISVISIBLE(c) || (c->ismpv && !c->isfullscreen)); c = c->snext);
+		for (c = selmon->stack; c && (!ISVISIBLE(c) || (c->issticky && !c->isfullscreen)); c = c->snext);
     if (!c || !ISVISIBLE(c))
     	for (c = selmon->stack; c && !ISVISIBLE(c) ; c = c->snext);
 
@@ -1242,6 +1244,7 @@ killclient(const Arg *arg)
 {
 	if (!selmon->sel)
 		return;
+
 	if (!sendevent(selmon->sel, wmatom[WMDelete])) {
 		XGrabServer(dpy);
 		XSetErrorHandler(xerrordummy);
@@ -1295,6 +1298,8 @@ manage(Window w, XWindowAttributes *wa)
 	updatewmhints(c);
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
+ 	if (c->ismpv)
+        automutempv(c->win);
 	if (!c->isfloating)
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if (c->isfloating)
@@ -1978,7 +1983,22 @@ togglesticky(const Arg *arg)
 {
 	if (!selmon->sel)
 		return;
+
     setsticky(selmon->sel, !selmon->sel->issticky);
+
+    if (selmon->sel->ismpv) {
+        Client *c;
+
+        // Find the next visible MPV window based on the sticky order
+        for (c = nexttiled(selmon->clients); c && !c->ismpv; c = nexttiled(c->next));
+
+        // If there is no next MPV window, focus on the last MPV window toggled sticky
+        if (!c) {
+            c = selmon->sel;
+        }
+        automutempv(c->win);
+    }
+
     focus(NULL);
 	arrange(selmon);
 }
@@ -2053,8 +2073,21 @@ unmanage(Client *c, int destroyed)
 	Monitor *m = c->mon;
 	XWindowChanges wc;
 
+    if (c->ismpv) {
+        Client *tc;
+        // Search for the first visible mpv window
+        for (tc = selmon->clients; tc && (!ISVISIBLE(tc) || !tc->ismpv ); tc = tc->next);
+        // If it didn't found one, search the first non visible mpv window
+        if (!c || !ISVISIBLE(tc))
+            for (tc = selmon->clients; tc && !tc->ismpv; tc = tc->next);
+        tc = tc->next;
+        if (tc)  
+            automutempv(tc->win);
+    }
+
 	detach(c);
 	detachstack(c);
+
 	if (!destroyed) {
 		wc.border_width = c->oldbw;
 		XGrabServer(dpy); /* avoid race conditions */
@@ -2439,14 +2472,19 @@ zoom(const Arg *arg)
 
     if (c->ismpv) {
         Client *tc;
-        for (tc = c->mon->clients; tc && !tc->ismpv; tc = tc->next);
-        if (c == tc && !(c = nexttiled(c->next))) 
+        for (tc = nexttiled(selmon->clients); tc && !tc->ismpv; tc = nexttiled(tc->next));
+
+        // If c is the only mpv window, return
+        if (c == tc && !(c = nexttiled(tc->next)))
             return;
-    }
-    else if (c == nexttiled(selmon->clients) && ( !(c = nexttiled(c->next)) || c->ismpv))
+
+        automutempv(c->win);
+    } 
+    else if (c == nexttiled(selmon->clients) &&  !(c = nexttiled(c->next)))
 	    return;
-	pop(c);
+    pop(c);
 }
+
 
 int
 main(int argc, char *argv[])

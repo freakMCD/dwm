@@ -24,18 +24,11 @@ static const char *tags[] = { "", "", "󰀻", "", "󱓞" };
 
 static const MonitorRule monrules[] = {
 	/* monitor  tag  layout  mfact  nmaster  showbar  topbar */
-	{  -1,      1, 1,      -1,    -1,      -1,      -1     }, 
-	{  -1,      2, 0,      -1,    -1,      -1,      -1     }, 
-	{  -1,      3, 0,      -1,    -1,      -1,      -1     }, 
+	{  -1,      1, 0,      -1,    -1,      -1,      -1     }, 
+	{  -1,      2, 1,      -1,     2,      -1,      -1     }, 
+	{  -1,      3, 1,      -1,    -1,      -1,      -1     }, 
 	{  -1,      4, 0,      -1,    -1,      -1,      -1     }, 
 	{  -1,      5, 0,      -1,    -1,      -1,      -1     }, 
-};
-
-static char * scratchpads[] = {
-	/* name */
-    "mpv",
-    "neomutt",
-    "newsraft",
 };
 
 static const Rule rules[] = {
@@ -62,28 +55,25 @@ static const Rule rules[] = {
     { NULL, "r2modman", NULL,               1 << 4, 1, -1 },
 
     /* Other */
-    { "mpv", NULL, NULL,                    SPTAG(0), 0, -1 },
-    { NULL, "neomutt", NULL,                SPTAG(1), 1, -1 },
-    { NULL, "newsraft", NULL,               SPTAG(2), 1, -1 },
-    
+    { "mpv", NULL, NULL,                    SPTAG, 0, -1 },
     { "scratchpad", NULL, NULL,             0, 1, -1 },
-    { "scratchpad", "st-floating", NULL,    0, 1, -1 },
+
 };
 
 static const char sticky_class[] = "mpv";
 
 /* layout(s) */
-static const float mfact     = 0.7; /* factor of master area size [0.05..0.95] */
+static const float mfact     = 0.67; /* factor of master area size [0.05..0.95] */
 static const int nmaster     = 1;    /* number of clients in master area */
 static const int resizehints = 0;    /* 1 means respect size hints in tiled resizals */
 static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
- 
+
 #include "gaplessgrid.c"
 static const Layout layouts[] = {
 	/* symbol     arrange function */
     /* first entry is default */
-    { ":::",      gaplessgrid },
     { "[]=",      tile },
+    { ":::",      gaplessgrid },
     { "[M]",      monocle },
 };
 
@@ -105,14 +95,14 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[]   = { "dmenu_run", NULL };
 static const char *termcmd[]    = { "st", NULL };
 
+#include "mpv-window-handling.c"
 #include "togglefullscr.c"
-#include "togglescratchpad.c"
 #include "movestack.c"
 
 static const Key keys[] = {
 	/* modifier                     key        function        argument */
-    { MODKEY|ShiftMask,             XK_Return, spawn,          {.v = termcmd } },
-    { MODKEY|ShiftMask,             XK_Return, view,           {.ui = 1 << 1 } },
+    { MODKEY|ShiftMask,           XK_Return, spawn,          {.v = termcmd } },
+    { MODKEY|ShiftMask,               XK_Return, view,           {.ui = 1 << 1 } },
     
 	{ MODKEY,                       XK_b,      togglebar,      {0} },
 	{ MODKEY,                       XK_j,      focusstack,     {.i = +1 } },
@@ -130,6 +120,7 @@ static const Key keys[] = {
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
     { MODKEY,                       XK_f,      togglefullscr,  {0} },
+    { ALTGR,                        XK_f,      togglefullscrmpv,  {0} },
     { MODKEY,                       XK_s,      togglesticky,    {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
@@ -143,9 +134,7 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 
-    { MODKEY,                       XK_less,    toggleview_scratchpad,   {.ui = 0} },
-    { MODKEY,                       XK_KP_Down, toggleview_scratchpad,   {.ui = 1} },
-    { MODKEY,                       XK_KP_Next, toggleview_scratchpad,   {.ui = 2} },
+    { MODKEY,                       XK_less,    togglestickympv,   {0} },
 
     { MODKEY,                       XK_KP_Left, toggleview,   {.ui = 1 << 4} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },
