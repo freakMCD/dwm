@@ -6,7 +6,7 @@
  * Called in manage(), unmanage(), zoom(), togglesticky, togglestickympv() 
  * ChatGPT 3.5 helped me with this function */
 void
-automutempv(Window win)
+autoplaympv(Window win)
 {
     Atom actual_type;
     int actual_format;
@@ -31,7 +31,7 @@ automutempv(Window win)
         if (child_pid == 0) {
             // This is the child process
             char cmd[256];
-            snprintf(cmd, sizeof(cmd), "mpvmute.sh %d", pid);
+            snprintf(cmd, sizeof(cmd), "mpvPlayControl.sh %d", pid);
             execl("/bin/sh", "/bin/sh", "-c", cmd, (char *)0);
             _exit(1); // In case execl fails
         }
@@ -67,7 +67,7 @@ static void togglestickympv(const Arg *arg) {
     Client *tc;
     for (tc = selmon->clients; tc && (!ISVISIBLE(tc) || !tc->ismpv ); tc = tc->next);
     if(tc) {
-        automutempv(tc->win);
+        autoplaympv(tc->win);
     }
 }
 

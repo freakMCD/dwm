@@ -1299,7 +1299,7 @@ manage(Window w, XWindowAttributes *wa)
 	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 	grabbuttons(c, 0);
  	if (c->ismpv)
-        automutempv(c->win);
+        autoplaympv(c->win);
 	if (!c->isfloating)
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if (c->isfloating)
@@ -1996,7 +1996,7 @@ togglesticky(const Arg *arg)
         if (!c) {
             c = selmon->sel;
         }
-        automutempv(c->win);
+        autoplaympv(c->win);
     }
 
     focus(NULL);
@@ -2082,7 +2082,7 @@ unmanage(Client *c, int destroyed)
             for (tc = selmon->clients; tc && !tc->ismpv; tc = tc->next);
         tc = tc->next;
         if (tc)  
-            automutempv(tc->win);
+            autoplaympv(tc->win);
     }
 
 	detach(c);
@@ -2478,7 +2478,7 @@ zoom(const Arg *arg)
         if (c == tc && !(c = nexttiled(tc->next)))
             return;
 
-        automutempv(c->win);
+        autoplaympv(c->win);
     } 
     else if (c == nexttiled(selmon->clients) &&  !(c = nexttiled(c->next)))
 	    return;

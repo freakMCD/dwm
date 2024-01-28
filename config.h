@@ -49,6 +49,7 @@ static const Rule rules[] = {
     /* Hollow Knight */     { "hollow_knight.x86_64", NULL, NULL,   1 << 3, 0, -1 },
     /* Deep Rock Galactic */{ "steam_app_548430", NULL, NULL,       1 << 3, 0, -1 },
     /* Outward DE */        { "steam_app_794260", NULL, NULL,       1 << 3, 0, -1 },
+    /* Dying Light */        { "steam_app_239140", NULL, NULL,       1 << 3, 0, -1 },
 
     /* Floating */
     { NULL, "steamwebhelper", NULL,         1 << 4, 1, -1 }, 
@@ -119,8 +120,8 @@ static const Key keys[] = {
     { MODKEY,                       XK_g,      setlayout,      {.v = &layouts[0]} },
 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[1]} },
 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
-    { MODKEY,                       XK_f,      togglefullscr,  {0} },
-    { ALTGR,                        XK_f,      togglefullscrmpv,  {0} },
+    { MODKEY,                       XK_f,      togglefullscrmpv,  {0} },
+    { ALTGR,                        XK_f,      togglefullscr,  {0} },
     { MODKEY,                       XK_s,      togglesticky,    {0} },
 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
