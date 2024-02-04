@@ -181,7 +181,6 @@ static int drawstatusbar(Monitor *m, int bh, char* text);
 static void enternotify(XEvent *e);
 static void expose(XEvent *e);
 static void focus(Client *c);
-static void focusdefault(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
@@ -1012,32 +1011,6 @@ focus(Client *c)
 	drawbars();
 }
 
-void
-focusdefault(Client *c)
-{
-
-    if (!c || !ISVISIBLE(c))
-        for (c = selmon->stack; c && !ISVISIBLE(c); c = c->snext);
-    if (selmon->sel && selmon->sel != c)
-		unfocus(selmon->sel, 0);
-	if (c) {
-		if (c->mon != selmon)
-			selmon = c->mon;
-		if (c->isurgent)
-			seturgent(c, 0);
-		detachstack(c);
-		attachstack(c);
-		grabbuttons(c, 1);
-		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
-		setfocus(c);
-	} else {
-		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
-		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
-	}
-	selmon->sel = c;
-	drawbars();
-}
-
 /* there are some broken focus acquiring clients needing extra handling */
 void
 focusin(XEvent *e)
@@ -1296,10 +1269,13 @@ manage(Window w, XWindowAttributes *wa)
 	updatewindowtype(c);
 	updatesizehints(c);
 	updatewmhints(c);
-	XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
-	grabbuttons(c, 0);
- 	if (c->ismpv)
+    if (c->ismpv) {
         autoplaympv(c->win);
+        XSelectInput(dpy, w, FocusChangeMask | PropertyChangeMask | StructureNotifyMask);        
+    }
+    else
+        XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
+    grabbuttons(c, 0);
 	if (!c->isfloating)
 		c->isfloating = c->oldstate = trans != None || c->isfixed;
 	if (c->isfloating)
@@ -1316,6 +1292,8 @@ manage(Window w, XWindowAttributes *wa)
 	arrange(c->mon);
 	XMapWindow(dpy, c->win);
 	focus(NULL);
+    if (c->ismpv) 
+        XSelectInput(dpy, w, EnterWindowMask|FocusChangeMask|PropertyChangeMask|StructureNotifyMask);
 }
 
 void
@@ -2075,13 +2053,13 @@ unmanage(Client *c, int destroyed)
 
     if (c->ismpv) {
         Client *tc;
-        // Search for the first visible mpv window
-        for (tc = selmon->clients; tc && (!ISVISIBLE(tc) || !tc->ismpv ); tc = tc->next);
-        // If it didn't found one, search the first non visible mpv window
-        if (!c || !ISVISIBLE(tc))
-            for (tc = selmon->clients; tc && !tc->ismpv; tc = tc->next);
-        tc = tc->next;
-        if (tc)  
+
+        // Search for the first visible mpv window (excluding Client *c)
+        for (tc = selmon->clients; tc && (!tc->ismpv || !ISVISIBLE(tc) || tc == c); tc = tc->next);
+        // If no visible mpv window is found, search for the first non-visible mpv window
+        if (!tc)
+            for (tc = selmon->clients; tc && (!tc->ismpv || tc == c); tc = tc->next); 
+        if (tc) 
             autoplaympv(tc->win);
     }
 
@@ -2470,7 +2448,7 @@ zoom(const Arg *arg)
 	if (!selmon->lt[selmon->sellt]->arrange || !c || c->isfloating)
 		return;
 
-    if (c->ismpv) {
+    if (c->ismpv && !c->isfullscreen) {
         Client *tc;
         for (tc = nexttiled(selmon->clients); tc && !tc->ismpv; tc = nexttiled(tc->next));
 

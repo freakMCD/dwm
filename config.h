@@ -135,7 +135,8 @@ static const Key keys[] = {
 	TAGKEYS(                        XK_3,                      2)
 	TAGKEYS(                        XK_4,                      3)
 
-    { MODKEY,                       XK_less,    togglestickympv,   {0} },
+    { MODKEY,                       XK_less,    togglestickympv,{0} },
+    { MODKEY,                       XK_q,       killmpv,        {0} },
 
     { MODKEY,                       XK_KP_Left, toggleview,   {.ui = 1 << 4} },
 	{ MODKEY|ShiftMask,             XK_q,       quit,               {0} },

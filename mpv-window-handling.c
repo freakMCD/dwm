@@ -31,6 +31,7 @@ autoplaympv(Window win)
         if (child_pid == 0) {
             // This is the child process
             char cmd[256];
+            // mpvPlayControl.sh is located at 'bin/mpvPlayControl.sh' in my dotfiles repo
             snprintf(cmd, sizeof(cmd), "mpvPlayControl.sh %d", pid);
             execl("/bin/sh", "/bin/sh", "-c", cmd, (char *)0);
             _exit(1); // In case execl fails
@@ -51,16 +52,9 @@ void togglefullscrmpv(const Arg *arg) {
 static void togglestickympv(const Arg *arg) {
     Client *c;
     for (c = selmon->clients; c; c = c->next) {
-        if (c->ismpv) {
+        if (c->ismpv)
             setsticky(c, !c->issticky);
-
-            if (c->isfullscreen)
-                focusdefault(c);
-            else
-                focus(NULL);
-        }
     }
-
     arrange(selmon);
 
     // Find the next tiled client that is both mpv and visible
@@ -68,9 +62,16 @@ static void togglestickympv(const Arg *arg) {
     for (tc = selmon->clients; tc && (!ISVISIBLE(tc) || !tc->ismpv ); tc = tc->next);
     if(tc) {
         autoplaympv(tc->win);
+        focus(NULL);
     }
 }
 
-
-
-
+void killmpv(const Arg *arg)
+{
+    Client *c;
+    // Iterate through clients and find the first visible mpv window
+    for (c = selmon->clients; c && (!ISVISIBLE(c) || !c->ismpv); c = c->next);
+    // If an mpv window is found, kill it
+    if (c) 
+        sendevent(c, wmatom[WMDelete]);
+}
