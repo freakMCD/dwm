@@ -440,14 +440,15 @@ attach(Client *c)
 {   
     if (c->ismpv) {
         Client *tc;
+        // Try to find the last non-mpv window
         for (tc = c->mon->clients; tc && tc->next && !tc->next->ismpv; tc = tc->next);
-        c->next = tc ? tc->next : NULL;
-        if (tc) {
+        // If there are non-mpv windows, insert the current mpv window after the last non-mpv window
+        if (tc && !tc->ismpv) {
+            c->next = tc->next;
             tc->next = c;
-        } else {
-            c->mon->clients = c;  /* Set c as the first client on the list if no mpv windows found */
+            return;
         }
-        return;
+        // If there are only mpv windows, fall through to the default behaviour
     }
     c->next = c->mon->clients;
     c->mon->clients = c;

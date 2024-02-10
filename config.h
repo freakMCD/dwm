@@ -49,7 +49,9 @@ static const Rule rules[] = {
     /* Hollow Knight */     { "hollow_knight.x86_64", NULL, NULL,   1 << 3, 0, -1 },
     /* Deep Rock Galactic */{ "steam_app_548430", NULL, NULL,       1 << 3, 0, -1 },
     /* Outward DE */        { "steam_app_794260", NULL, NULL,       1 << 3, 0, -1 },
-    /* Dying Light */        { "steam_app_239140", NULL, NULL,       1 << 3, 0, -1 },
+    /* Dying Light */       { "steam_app_239140", NULL, NULL,       1 << 3, 0, -1 },
+    /* Lethal Company */    { "steam_app_1966720", NULL, NULL,      1 << 3, 0, -1 },
+
 
     /* Floating */
     { NULL, "steamwebhelper", NULL,         1 << 4, 1, -1 }, 

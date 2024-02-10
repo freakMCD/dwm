@@ -59,7 +59,7 @@ static void togglestickympv(const Arg *arg) {
 
     // Find the next tiled client that is both mpv and visible
     Client *tc;
-    for (tc = selmon->clients; tc && (!ISVISIBLE(tc) || !tc->ismpv ); tc = tc->next);
+    for (tc = selmon->clients; tc && (!ISVISIBLE(tc) || !tc->ismpv); tc = tc->next);
     if(tc) {
         autoplaympv(tc->win);
         focus(NULL);
